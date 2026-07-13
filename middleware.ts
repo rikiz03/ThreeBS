@@ -19,8 +19,28 @@ const isPublicRoute = createRouteMatcher([
     '/api/cart/(.*)',
 ]);
 
+const HOST_REDIRECT_FROM = 'threebrotherstores.com';
+const HOST_REDIRECT_TO = 'www.threebrotherstores.com';
+
+function redirectToWwwIfNeeded(req: NextRequest) {
+    const host = req.headers.get('host')?.toLowerCase();
+
+    if (host === HOST_REDIRECT_FROM) {
+        const url = new URL(req.url);
+        url.host = HOST_REDIRECT_TO;
+        url.protocol = 'https';
+        return Response.redirect(url.toString(), 308);
+    }
+
+    return undefined;
+}
+
 export default clerkMiddleware(
     (auth: unknown, req: NextRequest) => {
+        // Ensure apex domain always reaches the Vercel site that is configured for www.
+        const hostRedirect = redirectToWwwIfNeeded(req);
+        if (hostRedirect) return hostRedirect;
+
         if (!isPublicRoute(req)) {
             const protector = auth as { protect: () => Promise<void> };
             return protector.protect();
@@ -37,4 +57,5 @@ export const config = {
         '/(api|trpc)(.*)',
     ],
 };
+
 

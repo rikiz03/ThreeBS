@@ -100,6 +100,8 @@ export const EXCLUSION_CRITERIA: Record<string, string[]> = {
 export function isSemanticMatch(product: any, categoryId: string): boolean {
 
     const criteria = SEMANTIC_CRITERIA[categoryId];
+
+
     if (!criteria) return true;
 
     const category = FEATURED_CATEGORIES.find(c => c.id === categoryId);
@@ -181,7 +183,8 @@ export async function getProducts(params: Record<string, string | number> = {}):
         
         if (!Array.isArray(data)) return [];
 
-        let products = data.map((p: WooProduct & { meta_data: any[] }) => {
+        let products = data.map((p: WooProduct & { meta_data: unknown[] }) => {
+
             const { supplier, externalId } = identifySupplier(p.meta_data || []);
             const basePrice = applyPriceLogic(p.price);
             let originalPrice = applyPriceLogic(p.regular_price);
@@ -206,9 +209,13 @@ export async function getProducts(params: Record<string, string | number> = {}):
             };
         });
 
-        if (categoryId) {
+        // Only apply semantic filtering for our curated Home-page “cat-*” categories.
+        // WooCommerce category pages should show imported products without being filtered out.
+        const isSemanticFeaturedCategory = typeof params.category === 'string' && params.category.startsWith('cat-');
+        if (categoryId && isSemanticFeaturedCategory) {
             products = products.filter(p => isSemanticMatch(p, categoryId));
         }
+
 
         return products;
     } catch (error) {
@@ -254,6 +261,8 @@ export async function getProduct(id: string): Promise<Product | null> {
         }
 
         let realReviews: Review[] = [];
+
+
         try {
             const reviewsData = await wooFetch(`products/reviews`, { product: id });
             if (Array.isArray(reviewsData)) {

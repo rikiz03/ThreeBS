@@ -24,8 +24,8 @@ export default function CheckoutPage() {
     const [isVerifying, setIsVerifying] = useState(false);
     const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'payoneer'>('transfer');
-
-
+    const [agreeToTerms, setAgreeToTerms] = useState(false);
+    const [termsError, setTermsError] = useState<string | null>(null);
 
     // Automatically calculate shipping when country or items change
     useEffect(() => {
@@ -275,6 +275,10 @@ export default function CheckoutPage() {
                                     >
                                         Use this address
                                     </button>
+
+                                    <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-2">
+                                        You will be asked to confirm the Terms of Service and Return Policy before completing payment.
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -320,24 +324,64 @@ export default function CheckoutPage() {
                                             <p className="text-gray-500 font-medium">Verifying payment...</p>
                                         </div>
                                     ) : (
-                                        <div className="mt-6">
-                                            {paymentMethod === 'payoneer' ? (
-                                                <PayoneerButton
-                                                    orderId={`ORD-TX-${Date.now()}`}
-                                                    amount={orderTotal}
-                                                    email={email}
-                                                    fullName={fullName}
-                                                    city={city}
-                                                />
-                                            ) : (
-                                                <TransferPayment
-                                                    orderId={`ORD-TX-${Date.now()}`}
-                                                    amount={orderTotal}
-                                                    email={email}
-                                                    fullName={fullName}
-                                                />
-                                            )}
-                                        </div>
+                                        <>
+                                            <div className="mt-6">
+                                                {paymentMethod === 'payoneer' ? (
+                                                    <PayoneerButton
+                                                        orderId={`ORD-TX-${Date.now()}`}
+                                                        amount={orderTotal}
+                                                        email={email}
+                                                        fullName={fullName}
+                                                        city={city}
+                                                    />
+                                                ) : (
+                                                    <TransferPayment
+                                                        orderId={`ORD-TX-${Date.now()}`}
+                                                        amount={orderTotal}
+                                                        email={email}
+                                                        fullName={fullName}
+                                                    />
+                                                )}
+                                            </div>
+
+                                            <div className="mt-6 border border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/20 rounded-lg p-4">
+                                                <label className="flex items-start gap-3 cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={agreeToTerms}
+                                                        onChange={(e) => {
+                                                            setAgreeToTerms(e.target.checked);
+                                                            if (e.target.checked) setTermsError(null);
+                                                        }}
+                                                        className="mt-1 h-4 w-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-400"
+                                                        required
+                                                    />
+                                                    <span className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                                                        I have read and agree to the{' '}
+                                                        <Link href="/terms-conditions" className="text-blue-600 dark:text-blue-400 hover:underline">
+                                                            Terms of Service
+                                                        </Link>{' '}
+                                                        and{' '}
+                                                        <Link href="/refund-policy" className="text-blue-600 dark:text-blue-400 hover:underline">
+                                                            Return Policy
+                                                        </Link>{' '}
+                                                        .
+                                                        <span className="block mt-1">
+                                                            View our{' '}
+                                                            <Link href="/privacy-policy" className="text-blue-600 dark:text-blue-400 hover:underline">
+                                                                Privacy Policy
+                                                            </Link>
+                                                        </span>
+                                                    </span>
+                                                </label>
+
+                                                {termsError && (
+                                                    <p className="mt-2 text-[12px] text-red-600 dark:text-red-400 font-medium">
+                                                        {termsError}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             )}
@@ -348,7 +392,17 @@ export default function CheckoutPage() {
                     <div className="lg:col-span-1">
                         <div className="bg-white dark:bg-gray-900/40 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 sticky top-24">
                             <button
-                                onClick={() => step === 3 ? alert("Please complete payment using the method selected.") : setStep(step + 1)}
+                                onClick={() => {
+                                    if (step === 3) {
+                                        if (!agreeToTerms) {
+                                            setTermsError('Please confirm that you agree to the Terms of Service and Return Policy to complete your order.');
+                                            return;
+                                        }
+                                        alert("Please complete payment using the method selected.");
+                                        return;
+                                    }
+                                    setStep(step + 1);
+                                }}
                                 className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 rounded-xl shadow-md transition-all active:scale-95 mb-4 text-sm"
                             >
                                 {step === 3 ? 'Step 3: Complete Payment' : 'Proceed to checkout'}
