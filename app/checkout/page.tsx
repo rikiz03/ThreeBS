@@ -5,12 +5,12 @@ import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Lock, CreditCard, Loader2, Trash2, Landmark } from 'lucide-react';
+import { Lock, CreditCard, Loader2, Trash2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { formatPrice } from '@/lib/geo';
 
-const TransferPayment = dynamic(() => import('@/components/TransferPayment'), { ssr: false });
-const PayoneerButton = dynamic(() => import('@/components/PayoneerButton'), { ssr: false });
+const StripeCheckout = dynamic(() => import('@/components/StripeCheckout'), { ssr: false });
+const PayPalButton = dynamic(() => import('@/components/PayPalButton'), { ssr: false });
 
 export default function CheckoutPage() {
     const { items, removeItem, updateQuantity, total, clearCart, shippingFee, setShippingFee } = useCartStore();
@@ -23,7 +23,7 @@ export default function CheckoutPage() {
     const [city, setCity] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
     const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'payoneer'>('transfer');
+    const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'paypal'>('stripe');
     const [agreeToTerms, setAgreeToTerms] = useState(false);
     const [termsError, setTermsError] = useState<string | null>(null);
 
@@ -293,21 +293,23 @@ export default function CheckoutPage() {
                                 <div className="space-y-6">
                                     <div className="flex flex-col md:flex-row gap-4 mb-6">
                                         <button
-                                            onClick={() => setPaymentMethod('payoneer')}
-                                            className={`flex-1 p-4 border rounded-lg flex flex-col items-center gap-2 transition-all ${paymentMethod === 'payoneer' ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20 ring-1 ring-purple-600' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 bg-white dark:bg-gray-800'}`}
+                                            onClick={() => setPaymentMethod('stripe')}
+                                            className={`flex-1 p-4 border rounded-lg flex flex-col items-center gap-2 transition-all ${paymentMethod === 'stripe' ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20 ring-1 ring-purple-600' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 bg-white dark:bg-gray-800'}`}
                                         >
                                             <div className="bg-purple-100 dark:bg-purple-900/40 p-2 rounded-full"><CreditCard className="w-5 h-5 text-purple-700 dark:text-purple-400" /></div>
-                                            <span className="font-bold text-gray-800 dark:text-gray-100 text-center">Global Card Pay</span>
-                                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Secure Checkout</span>
+                                            <span className="font-bold text-gray-800 dark:text-gray-100 text-center">Credit / Debit Card</span>
+                                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Visa, Mastercard, Amex + Apple Pay & Google Pay</span>
                                         </button>
 
                                         <button
-                                            onClick={() => setPaymentMethod('transfer')}
-                                            className={`flex-1 p-4 border rounded-lg flex flex-col items-center gap-2 transition-all ${paymentMethod === 'transfer' ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-600' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 bg-white dark:bg-gray-800'}`}
+                                            onClick={() => setPaymentMethod('paypal')}
+                                            className={`flex-1 p-4 border rounded-lg flex flex-col items-center gap-2 transition-all ${paymentMethod === 'paypal' ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 ring-1 ring-blue-600' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 bg-white dark:bg-gray-800'}`}
                                         >
-                                            <div className="bg-green-100 dark:bg-green-900/40 p-2 rounded-full"><Landmark className="w-5 h-5 text-green-700 dark:text-green-400" /></div>
-                                            <span className="font-bold text-gray-800 dark:text-gray-100 text-center">USD Bank Transfer</span>
-                                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Recommended for Large Orders</span>
+                                            <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-full">
+                                                <span className="text-blue-700 dark:text-blue-400 font-bold text-lg">P</span>
+                                            </div>
+                                            <span className="font-bold text-gray-800 dark:text-gray-100 text-center">PayPal</span>
+                                            <span className="text-xs text-gray-500 dark:text-gray-400 text-center">Pay with your PayPal account</span>
                                         </button>
                                     </div>
 
@@ -326,8 +328,8 @@ export default function CheckoutPage() {
                                     ) : (
                                         <>
                                             <div className="mt-6">
-                                                {paymentMethod === 'payoneer' ? (
-                                                    <PayoneerButton
+                                                {paymentMethod === 'stripe' ? (
+                                                    <StripeCheckout
                                                         orderId={`ORD-TX-${Date.now()}`}
                                                         amount={orderTotal}
                                                         email={email}
@@ -335,11 +337,12 @@ export default function CheckoutPage() {
                                                         city={city}
                                                     />
                                                 ) : (
-                                                    <TransferPayment
+                                                    <PayPalButton
                                                         orderId={`ORD-TX-${Date.now()}`}
                                                         amount={orderTotal}
                                                         email={email}
                                                         fullName={fullName}
+                                                        city={city}
                                                     />
                                                 )}
                                             </div>

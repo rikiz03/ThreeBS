@@ -5,8 +5,12 @@ import { CheckCircle, Package, ArrowRight, Loader2 } from 'lucide-react';
 import { useCartStore, useSettingsStore } from '@/lib/store';
 import { trackEvent } from '@/lib/analytics';
 import { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function CheckoutSuccessPage() {
+    const searchParams = useSearchParams();
+    const sessionId = searchParams.get('session_id');
+    
     const { items, total, checkoutDetails, clearCart } = useCartStore();
     const { countryCode } = useSettingsStore();
     const [isSyncing, setIsSyncing] = useState(true);
@@ -16,17 +20,23 @@ export default function CheckoutSuccessPage() {
         const syncOrder = async () => {
             if (hasSynced.current) return;
             
-            // Only sync if we have details and items (prevents duplicate syncs on refresh)
-            if (checkoutDetails && items.length > 0) {
-                hasSynced.current = true;
+            hasSynced.current = true;
+
+            // Determine order ID from session or checkout details
+            const orderId = checkoutDetails?.orderId || sessionId || ('ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+            const fullName = checkoutDetails?.fullName || 'Guest';
+            const city = checkoutDetails?.city || '';
+            
+            // Sync order to fulfillment if we have items
+            if (items.length > 0) {
                 try {
                     await fetch('/api/fulfillment/sync-order', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            orderId: checkoutDetails.orderId,
-                            fullName: checkoutDetails.fullName,
-                            city: checkoutDetails.city,
+                            orderId,
+                            fullName,
+                            city,
                             countryCode: countryCode,
                             total: total(),
                             items: items.map(item => ({
@@ -38,29 +48,28 @@ export default function CheckoutSuccessPage() {
                             }))
                         }),
                     });
-
-                    trackEvent({
-                        type: 'purchase',
-                        orderId: checkoutDetails.orderId,
-                    });
                 } catch (error) {
                     console.error('Fulfillment sync failed:', error);
                 }
-            } else if (!checkoutDetails) {
-                 // Fallback if accessed directly
-                 trackEvent({
-                    type: 'purchase',
-                    orderId: 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                });
             }
 
-            // Always clear the cart to prevent resyncing
+            // Track event
+            try {
+                trackEvent({
+                    type: 'purchase',
+                    orderId,
+                });
+            } catch (e) {
+                console.error('Analytics tracking failed:', e);
+            }
+
+            // Clear the cart
             clearCart();
             setIsSyncing(false);
         };
 
         syncOrder();
-    }, [checkoutDetails, items, total, countryCode, clearCart]);
+    }, [checkoutDetails, items, total, countryCode, clearCart, sessionId]);
 
     return (
         <div className="bg-gray-50 dark:bg-[#0a0a0a] min-h-screen py-20 transition-colors duration-300">
@@ -72,7 +81,7 @@ export default function CheckoutSuccessPage() {
 
                     <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Order Placed!</h1>
                     <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">
-                        Thank you for your purchase. We've sent a confirmation email to your registered address.
+                        Thank you for your purchase. We&apos;ve sent a confirmation email to your registered address.
                     </p>
 
                     <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 mb-10 text-left border dark:border-gray-700">

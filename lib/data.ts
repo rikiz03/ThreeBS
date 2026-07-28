@@ -369,7 +369,7 @@ export async function getCategories(params: Record<string, string | number> = {}
             }
             
             if (!finalImage) {
-                finalImage = (!c.image || isPlaceholder) ? "https://placehold.co/600x600/png?text=No+Image" : c.image;
+                finalImage = (!c.image || isPlaceholder) ? `https://source.unsplash.com/400x400/?${encodeURIComponent(niceName)}+product` : c.image;
             }
 
             return {
@@ -407,7 +407,7 @@ export async function getCategory(slug: string): Promise<Category | null> {
             id: c.id.toString(),
             name: (mappedTitle || c.name).replace(/&amp;/g, '&').replace(/&#038;/g, '&'), // Priority to marketing title
             slug: c.slug,
-            image: c.image?.src || "https://placehold.co/600x600/png?text=No+Image"
+            image: c.image?.src || `https://source.unsplash.com/400x400/?${encodeURIComponent(c.name)}+product`
         };
     } catch (error) {
         const feat = FEATURED_CATEGORIES.find(cat => cat.slug === slug);
