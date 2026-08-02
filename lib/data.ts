@@ -6,6 +6,11 @@ const WOO_URL = process.env.NEXT_PUBLIC_WOOCOMMERCE_URL;
 const CK = process.env.WOOCOMMERCE_CONSUMER_KEY;
 const CS = process.env.WOOCOMMERCE_CONSUMER_SECRET;
 
+// In-memory TTL cache to deduplicate repeat/simultaneous fetches (e.g. generateMetadata + page).
+// Prevents the product page from re-fetching the same data 2x, which previously could cause 40s+ loads.
+const fetchCache = new Map<string, { data: any; timestamp: number }>();
+const FETCH_CACHE_TTL = 30 * 1000; // 30 seconds
+
 async function wooFetch(endpoint: string, params: Record<string, string | number> = {}) {
     if (!WOO_URL || !CK || !CS) {
         throw new Error("WooCommerce credentials missing");
@@ -19,8 +24,14 @@ async function wooFetch(endpoint: string, params: Record<string, string | number
         url.searchParams.set(key, value.toString());
     });
 
+    const cacheKey = url.toString();
+    const cached = fetchCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < FETCH_CACHE_TTL) {
+        return cached.data;
+    }
+
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); 
+    const timeoutId = setTimeout(() => controller.abort(), 5000); 
 
     try {
         const res = await fetch(url.toString(), {
@@ -32,7 +43,9 @@ async function wooFetch(endpoint: string, params: Record<string, string | number
             throw new Error(`WooCommerce API error: ${res.statusText}`);
         }
 
-        return res.json();
+        const data = await res.json();
+        fetchCache.set(cacheKey, { data, timestamp: Date.now() });
+        return data;
     } finally {
         clearTimeout(timeoutId);
     }
@@ -56,6 +69,42 @@ export const CATEGORY_IMAGES: Record<string, string> = {
     'automotive': 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&h=400&fit=crop',
     'musical instruments': 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&h=400&fit=crop'
 };
+
+// Direct Unsplash photo URLs by keyword — replaces the deprecated source.unsplash.com service.
+// Fallback for category names not in CATEGORY_IMAGES so categories never show a broken image.
+const CATEGORY_FALLBACK_KEYWORDS: Record<string, string> = {
+    'electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=400&h=400&fit=crop',
+    'mobile': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&h=400&fit=crop',
+    'phone': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&h=400&fit=crop',
+    'fitness': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&h=400&fit=crop',
+    'gym': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&h=400&fit=crop',
+    'workout': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&h=400&fit=crop',
+    'sport': 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=400&h=400&fit=crop',
+    'outdoor': 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=400&h=400&fit=crop',
+    'camping': 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=400&h=400&fit=crop',
+    'garden': 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=400&h=400&fit=crop',
+    'fashion': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400&h=400&fit=crop',
+    'clothing': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=400&h=400&fit=crop',
+    'home': 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=400&h=400&fit=crop',
+    'beauty': 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&h=400&fit=crop',
+    'health': 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=400&h=400&fit=crop',
+    'medical': 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=400&h=400&fit=crop',
+    'auto': 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&h=400&fit=crop',
+    'car': 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&h=400&fit=crop',
+    'music': 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&h=400&fit=crop',
+    'book': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&h=400&fit=crop',
+    'toy': 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?q=80&w=400&h=400&fit=crop',
+};
+
+function getCategoryFallbackImage(name: string): string {
+    const lower = name.toLowerCase();
+    for (const [keyword, url] of Object.entries(CATEGORY_FALLBACK_KEYWORDS)) {
+        if (lower.includes(keyword)) return url;
+    }
+    // Ultimate fallback: branded colored placeholder (never a broken image)
+    return `https://placehold.co/400x400/0E5B3D/FFFFFF/png?text=${encodeURIComponent(name.replace(/\s+/g, '+'))}`;
+}
+
 export const FEATURED_CATEGORIES: Category[] = [
     { id: 'cat-gym', name: 'Elite Fitness', slug: 'fitness-gym', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&h=400&fit=crop' },
     { id: 'cat-mobile', name: 'Mobile Essentials', slug: 'mobile-accessories', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&h=400&fit=crop' },
@@ -241,6 +290,11 @@ export async function getProduct(id: string): Promise<Product | null> {
         }
 
         let variants: Product['variants'] = [];
+        let attributes = p.attributes?.map(attr => ({
+            name: attr.name,
+            options: attr.options
+        })) || [];
+
         if (p.type === 'variable' && p.variations?.length > 0) {
             try {
                 const variationsData = await wooFetch(`products/${id}/variations`, { per_page: 100 });
@@ -254,11 +308,37 @@ export async function getProduct(id: string): Promise<Product | null> {
                             option: attr.option
                         }))
                     }));
+
+                    // If product-level attributes are missing (common for CJ/DSers/EPROLO imports),
+                    // derive them from the variations themselves so the variant selector still shows.
+                    if (attributes.length === 0 && variants.length > 0) {
+                        const derivedMap: Record<string, Set<string>> = {};
+                        variants.forEach(v => {
+                            v.attributes?.forEach(attr => {
+                                if (!derivedMap[attr.name]) derivedMap[attr.name] = new Set();
+                                derivedMap[attr.name].add(attr.option);
+                            });
+                        });
+                        attributes = Object.entries(derivedMap).map(([name, optionsSet]) => ({
+                            name,
+                            options: Array.from(optionsSet)
+                        }));
+                    }
                 }
             } catch (vError) {
                 console.error(`Error fetching variations for product ${id}:`, vError);
             }
         }
+
+        // Build gallery images: product gallery images + variant images (deduplicated)
+        const galleryImages: string[] = [];
+        (p.images || []).forEach((img: any) => {
+            if (img?.src && !galleryImages.includes(img.src)) galleryImages.push(img.src);
+        });
+        variants.forEach(v => {
+            if (v.image && !galleryImages.includes(v.image)) galleryImages.push(v.image);
+        });
+        const images = galleryImages.length > 0 ? galleryImages : [p.images[0]?.src || "https://placehold.co/600x600/png?text=No+Image"];
 
         let realReviews: Review[] = [];
 
@@ -286,6 +366,7 @@ export async function getProduct(id: string): Promise<Product | null> {
             price: basePrice,
             originalPrice,
             image: p.images[0]?.src || "https://placehold.co/600x600/png?text=No+Image",
+            images,
             rating: parseFloat(p.average_rating || "0"),
             reviews: p.rating_count,
             category: p.categories[0]?.name || "Uncategorized",
@@ -293,10 +374,7 @@ export async function getProduct(id: string): Promise<Product | null> {
             description: p.description,
             supplier,
             externalId,
-            attributes: p.attributes?.map(attr => ({
-                name: attr.name,
-                options: attr.options
-            })),
+            attributes,
             variants,
             buyerReviews: realReviews
         };
@@ -369,7 +447,7 @@ export async function getCategories(params: Record<string, string | number> = {}
             }
             
             if (!finalImage) {
-                finalImage = (!c.image || isPlaceholder) ? `https://source.unsplash.com/400x400/?${encodeURIComponent(niceName)}+product` : c.image;
+                finalImage = (!c.image || isPlaceholder) ? getCategoryFallbackImage(niceName) : c.image;
             }
 
             return {
@@ -407,7 +485,7 @@ export async function getCategory(slug: string): Promise<Category | null> {
             id: c.id.toString(),
             name: (mappedTitle || c.name).replace(/&amp;/g, '&').replace(/&#038;/g, '&'), // Priority to marketing title
             slug: c.slug,
-            image: c.image?.src || `https://source.unsplash.com/400x400/?${encodeURIComponent(c.name)}+product`
+            image: c.image?.src || getCategoryFallbackImage(c.name)
         };
     } catch (error) {
         const feat = FEATURED_CATEGORIES.find(cat => cat.slug === slug);

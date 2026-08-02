@@ -7,7 +7,7 @@ import PriceDisplay from '@/components/PriceDisplay';
 import ProductTracker from '@/components/ProductTracker';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import BuyerReviews from '@/components/BuyerReviews';
-import SyncedProductImage from '@/components/SyncedProductImage';
+import ProductGallery from '@/components/ProductGallery';
 import DesktopActionPanel from '@/components/DesktopActionPanel';
 import ProductCard from '@/components/ProductCard';
 import { getTranslation } from '@/lib/i18n';
@@ -123,13 +123,19 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             <ProductTracker product={product} />
             
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                {/* 1. TOP ON MOBILE: Buy Box card with internal image */}
-                <div className="md:col-span-3 md:order-3 order-1 md:sticky md:top-24 self-start max-h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide pb-4">
+                {/* 1. TOP ON MOBILE: Image Gallery (AliExpress style) */}
+                <div className="md:col-span-5 md:order-1 order-1 flex flex-col gap-4">
+                    <ProductGallery product={product} />
+                    <DesktopActionPanel product={product} />
+                </div>
+
+                {/* 2. SECOND ON MOBILE: Buy Box card */}
+                <div className="md:col-span-3 md:order-3 order-2 md:sticky md:top-24 self-start max-h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide pb-4">
                     <BuyBox product={product} />
                 </div>
 
-                {/* 2. SECOND ON MOBILE: Product Heading & Details */}
-                <div className="md:col-span-4 md:order-2 order-2">
+                {/* 3. THIRD ON MOBILE: Product Heading & Details */}
+                <div className="md:col-span-4 md:order-2 order-3">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{product.title}</h1>
                     <div className="flex items-center gap-2 mb-4">
                         <div className="flex text-yellow-500">
@@ -180,27 +186,13 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                     </div>
                 </div>
 
-                {/* 3. THIRD ON MOBILE: Desktop Image & Reviews */}
-                <div className="md:col-span-5 md:order-1 order-3 flex flex-col gap-4">
-                    {/* Desktop Only Image Display (Synced with variants) */}
-                    <div className="hidden md:block relative aspect-square border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden bg-white dark:bg-[#0a0a0a]">
-                        <SyncedProductImage
-                            fallbackImage={product.image}
-                            alt={product.title}
-                        />
-                    </div>
-
-                    {/* NEW: Secondary Desktop Actions under image */}
-                    <DesktopActionPanel product={product} />
-
-                    {/* Buyer Reviews Bunch */}
-                    <div className="mt-4">
-                        <BuyerReviews 
-                            reviews={product.buyerReviews || []} 
-                            averageRating={product.rating} 
-                            totalReviews={product.reviews} 
-                        />
-                    </div>
+                {/* Buyer Reviews Bunch */}
+                <div className="md:col-span-5 md:order-1 order-4 -mt-4">
+                    <BuyerReviews 
+                        reviews={product.buyerReviews || []} 
+                        averageRating={product.rating} 
+                        totalReviews={product.reviews} 
+                    />
                 </div>
             </div>
 

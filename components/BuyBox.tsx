@@ -57,6 +57,24 @@ export default function BuyBox({ product }: BuyBoxProps) {
         return variant?.image;
     };
 
+    // Helper to find the price for a specific attribute option, considering current selections
+    const getOptionPrice = (attrName: string, option: string): number | null => {
+        if (!product.variants || product.variants.length === 0) return null;
+
+        // Build candidate selections: current selections for all attributes, but override this one
+        const candidateAttrs: Record<string, string> = {
+            ...selectedAttributes,
+            [attrName]: option
+        };
+
+        // Find the variant whose attributes match all candidate selections
+        const match = product.variants.find(v => 
+            v.attributes.every(a => candidateAttrs[a.name] === a.option)
+        );
+
+        return match ? match.price : null;
+    };
+
     // Find matching variant when attributes change
     useEffect(() => {
         if (product.variants && product.variants.length > 0) {
@@ -224,45 +242,55 @@ export default function BuyBox({ product }: BuyBoxProps) {
                                         const isActive = selectedAttributes[attr.name] === opt;
                                         
                                         if (optImage) {
+                                            const optionPrice = getOptionPrice(attr.name, opt);
                                             return (
-                                                <button
-                                                    key={opt}
-                                                    onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
-                                                    className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 ${
-                                                        isActive 
-                                                        ? 'border-blue-600 ring-2 ring-blue-600/20 shadow-md' 
-                                                        : 'border-gray-100 hover:border-gray-300'
-                                                    }`}
-                                                    title={opt}
-                                                >
-                                                    <Image 
-                                                        src={optImage} 
-                                                        alt={opt} 
-                                                        fill 
-                                                        unoptimized
-                                                        className="object-cover"
-                                                    />
-                                                    {isActive && (
-                                                        <div className="absolute inset-0 bg-blue-600/10 flex items-center justify-center">
-                                                            <Check className="w-5 h-5 text-blue-600 drop-shadow-sm" />
-                                                        </div>
-                                                    )}
-                                                </button>
+                                                <div key={opt} className="flex flex-col items-center gap-1">
+                                                    <button
+                                                        onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
+                                                        className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 ${
+                                                            isActive 
+                                                            ? 'border-blue-600 ring-2 ring-blue-600/20 shadow-md' 
+                                                            : 'border-gray-100 hover:border-gray-300'
+                                                        }`}
+                                                        title={opt}
+                                                    >
+                                                        <Image 
+                                                            src={optImage} 
+                                                            alt={opt} 
+                                                            fill 
+                                                            unoptimized
+                                                            className="object-cover"
+                                                        />
+                                                        {isActive && (
+                                                            <div className="absolute inset-0 bg-blue-600/10 flex items-center justify-center">
+                                                                <Check className="w-5 h-5 text-blue-600 drop-shadow-sm" />
+                                                            </div>
+                                                        )}
+                                                    </button>
+                                                    <span className={`text-[9px] font-bold ${isActive ? 'text-[#0E5B3D]' : 'text-gray-400'}`}>
+                                                        {formatPrice(optionPrice ?? basePrice, currency)}
+                                                    </span>
+                                                </div>
                                             );
                                         }
 
+                                        const optionPrice = getOptionPrice(attr.name, opt);
                                         return (
-                                            <button
-                                                key={opt}
-                                                onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
-                                                className={`px-4 py-2 text-xs rounded-lg border transition-all hover:bg-gray-50 active:scale-95 ${
-                                                    isActive
-                                                        ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600 font-bold'
-                                                        : 'border-gray-200 text-gray-600 bg-white'
-                                                }`}
-                                            >
-                                                {opt}
-                                            </button>
+                                            <div key={opt} className="flex flex-col items-center">
+                                                <button
+                                                    onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
+                                                    className={`px-4 py-2 text-xs rounded-lg border transition-all hover:bg-gray-50 active:scale-95 ${
+                                                        isActive
+                                                            ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600 font-bold'
+                                                            : 'border-gray-200 text-gray-600 bg-white'
+                                                    }`}
+                                                >
+                                                    {opt}
+                                                </button>
+                                                <span className={`text-[9px] font-bold mt-0.5 ${isActive ? 'text-[#0E5B3D]' : 'text-gray-400'}`}>
+                                                    {formatPrice(optionPrice ?? basePrice, currency)}
+                                                </span>
+                                            </div>
                                         );
                                     })}
                                 </div>

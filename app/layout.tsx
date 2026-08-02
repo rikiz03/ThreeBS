@@ -84,7 +84,7 @@ export default function RootLayout({
     logo: 'https://threebrothersstores.com/mylogo1.png',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'support@threebrothersstores.com',
+      email: 'support@threebrotherstores.com',
       contactType: 'customer service',
       areaServed: 'Global',
       availableLanguage: 'English',
@@ -128,18 +128,11 @@ export default function RootLayout({
               (function(){
               var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
               s1.async=true;
-              s1.src='https://embed.tawk.to/69cff4071772311c3585d768/1jla52g6p';
+              s1.src='https://embed.tawk.to/6a5bbffe1c52dc1d4c7edb33/1jtr6buqv';
               s1.charset='UTF-8';
               s1.setAttribute('crossorigin','*');
               s0.parentNode.insertBefore(s1,s0);
               })();
-
-              // Ensure the chat box stays minimized on mobile devices
-              Tawk_API.onLoad = function(){
-                if(Tawk_API.isMobile()){
-                   Tawk_API.minimize();
-                }
-              };
             `}
           </Script>
         </body>

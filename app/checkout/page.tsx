@@ -139,7 +139,7 @@ export default function CheckoutPage() {
     return (
         <div className="bg-gray-50 dark:bg-[#0a0a0a] min-h-screen pb-20 dark:text-white transition-colors duration-300">
             <div className="container mx-auto px-4 py-8">
-                <h1 className="text-2xl font-medium mb-6 dark:text-white">Checkout ({items.length} items)</h1>
+                <h1 className="text-2xl font-medium mb-6 dark:text-white">Checkout ({totalQuantity} items)</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-6">
@@ -418,7 +418,7 @@ export default function CheckoutPage() {
                             <h3 className="font-bold text-lg mb-4 dark:text-white">Order Summary</h3>
                             <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                                 <div className="flex justify-between">
-                                    <span>Items ({items.length}):</span>
+                                    <span>Items ({totalQuantity}):</span>
                                     <span className="text-gray-900 dark:text-gray-100 font-medium">{formatPrice(total(), currency)}</span>
                                 </div>
                                 <div className="flex justify-between">

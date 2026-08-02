@@ -157,7 +157,7 @@ export default function Header() {
                                 <ShoppingCart className="w-5 h-5" />
                                 {mounted && cartItems.length > 0 && (
                                     <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[11px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#0E5B3D] shadow-md animate-bounce">
-                                        {cartItems.length}
+                                        {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                                     </span>
                                 )}
                             </div>

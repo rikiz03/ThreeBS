@@ -17,8 +17,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     const removeItem = useCartStore((state) => state.removeItem);
     const cartItems = useCartStore((state) => state.items);
     
-    // Check how many of this item are in cart
-    const cartItemCount = cartItems.filter(item => item.id === product.id).length;
+    // Check how many of this item are in cart (sum quantities, not entry count)
+    const cartItemCount = cartItems
+        .filter(item => item.id === product.id)
+        .reduce((sum, item) => sum + item.quantity, 0);
     const [isHovered, setIsHovered] = useState(false);
 
     // Format price with superscript cents as shown in mockup (e.g. 17.29$)
