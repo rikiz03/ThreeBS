@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { CheckCircle, Package, ArrowRight, Loader2 } from 'lucide-react';
 import { useCartStore, useSettingsStore } from '@/lib/store';
 import { trackEvent } from '@/lib/analytics';
-import { useEffect, useState, useRef } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('session_id');
     
@@ -128,5 +128,20 @@ export default function CheckoutSuccessPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function CheckoutSuccessPage() {
+    return (
+        <Suspense fallback={
+            <div className="bg-gray-50 dark:bg-[#0a0a0a] min-h-screen py-20 transition-colors duration-300">
+                <div className="container mx-auto px-4 max-w-2xl text-center">
+                    <Loader2 className="w-10 h-10 text-blue-600 dark:text-blue-400 animate-spin mx-auto" />
+                    <p className="text-gray-500 dark:text-gray-400 mt-4 font-medium">Loading order details...</p>
+                </div>
+            </div>
+        }>
+            <CheckoutSuccessContent />
+        </Suspense>
     );
 }

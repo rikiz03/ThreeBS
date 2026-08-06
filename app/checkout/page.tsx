@@ -1,4 +1,4 @@
-re'use client';
+'use client';
 
 import { useCartStore, useSettingsStore } from '@/lib/store';
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
