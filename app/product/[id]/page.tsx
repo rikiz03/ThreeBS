@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Star, ShieldCheck, Truck, RotateCcw, Lock } from 'lucide-react';
+import { Star, ShieldCheck, Truck, RotateCcw, Lock, Share2, Heart } from 'lucide-react';
 import { getProduct, getCategories, getRelatedProducts } from '@/lib/data';
 import BuyBox from '@/components/BuyBox';
 import PriceDisplay from '@/components/PriceDisplay';
@@ -114,107 +114,129 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         : 0;
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-6">
             <Breadcrumbs items={breadcrumbItems} />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             <ProductTracker product={product} />
-            
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                {/* 1. TOP ON MOBILE: Image Gallery (AliExpress style) */}
-                <div className="md:col-span-5 md:order-1 order-1 flex flex-col gap-4">
+
+            {/* AliExpress-style top layout: gallery left, purchase panel right */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
+                {/* LEFT: Product Gallery */}
+                <div className="lg:col-span-5">
                     <ProductGallery product={product} />
-                    <DesktopActionPanel product={product} />
                 </div>
 
-                {/* 2. SECOND ON MOBILE: Buy Box card */}
-                <div className="md:col-span-3 md:order-3 order-2 md:sticky md:top-24 self-start max-h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide pb-4">
-                    <BuyBox product={product} />
-                </div>
+                {/* RIGHT: Purchase Panel */}
+                <div className="lg:col-span-7">
+                    {/* Title */}
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-snug mb-2">
+                        {product.title}
+                    </h1>
 
-                {/* 3. THIRD ON MOBILE: Product Heading & Details */}
-                <div className="md:col-span-4 md:order-2 order-3">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{product.title}</h1>
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="flex text-yellow-500">
-                            {[...Array(5)].map((_, i) => (
-                                <Star key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-200'}`} />
-                            ))}
+                    {/* Rating + orders row */}
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                        <div className="flex items-center gap-1">
+                            <div className="flex text-yellow-400">
+                                {[...Array(5)].map((_, i) => (
+                                    <Star key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-200 dark:text-gray-700'}`} />
+                                ))}
+                            </div>
+                            <span className="text-sm font-bold text-[#0E5B3D] dark:text-[#74D644] ml-1">{product.rating.toFixed(1)}</span>
                         </div>
-                        <span className="text-blue-600 cursor-pointer hover:underline">{product.reviews} ratings</span>
+                        <span className="w-px h-4 bg-gray-200 dark:bg-gray-700"></span>
+                        <span className="text-sm text-gray-500 cursor-pointer hover:underline">{product.reviews} ratings</span>
+                        <span className="w-px h-4 bg-gray-200 dark:bg-gray-700"></span>
+                        <span className="text-sm text-gray-500">
+                            <span className="font-bold text-gray-700 dark:text-gray-300">{Math.max(product.reviews, 1) * 3}</span> sold
+                        </span>
                     </div>
 
-                    <div className="border-t border-b border-gray-100 dark:border-gray-800 py-4 mb-4">
-                        <PriceDisplay 
-                            price={product.price} 
-                            originalPrice={product.originalPrice} 
-                            showOriginal={true} 
-                            size="xl" 
-                        />
-                        <div className="mt-2 text-teal-600 text-sm font-medium flex items-center gap-1">
+                    {/* Price block */}
+                    <div className="bg-[#0E5B3D]/5 dark:bg-[#0E5B3D]/10 rounded-2xl p-4 mb-5">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <PriceDisplay price={product.price} originalPrice={product.originalPrice} showOriginal={true} size="xl" />
+                            {discount > 0 && (
+                                <div className="bg-[#74D644] text-[#0E5B3D] text-sm font-black px-3 py-1 rounded-lg">
+                                    -{discount}% {t('off')}
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-2 text-[#0E5B3D] dark:text-[#74D644] text-sm font-medium flex items-center gap-1.5">
                             <Truck className="w-4 h-4" /> Final Price - Includes Free Tracked Shipping
                         </div>
-                        <div className="flex items-center gap-2 mt-1">
-                            <span className="text-red-600 text-sm font-medium">-{discount}% {t('off')}</span>
-                        </div>
                     </div>
 
-                    {/* Trust Badge: Global Shipping */}
-                    <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800/50 rounded-lg p-3 inline-flex items-center gap-2 mb-6 w-full">
-                        <Truck className="w-5 h-5 text-blue-700 dark:text-blue-400" />
-                        <div>
-                            <span className="block text-sm font-bold text-blue-800 dark:text-blue-300">Worldwide Tracked Shipping</span>
-                            <span className="block text-xs text-blue-600 dark:text-blue-400/70">See estimated delivery time in the Buy Box</span>
-                        </div>
-                    </div>
+                    {/* BuyBox (attributes, quantity, shipping, buttons) */}
+                    <BuyBox product={product} />
 
-                    <div className="space-y-3 mb-6">
-                        <div className="flex items-start gap-2">
-                            <div className="mt-1"><RotateCcw className="w-5 h-5 text-gray-400" /></div>
+                    {/* Trust badges row */}
+                    <div className="grid grid-cols-3 gap-3 mt-5">
+                        <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
+                            <Truck className="w-5 h-5 text-[#0E5B3D]" />
                             <div>
-                                <span className="font-semibold block text-sm">Hassle-Free Returns</span>
-                                <p className="text-xs text-gray-500">Shop with confidence with our 30-day return policy.</p>
+                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200">Worldwide Tracking</span>
+                                <span className="block text-[10px] text-gray-500">Free tracked shipping</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
+                            <RotateCcw className="w-5 h-5 text-[#0E5B3D]" />
+                            <div>
+                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200">Hassle-Free Returns</span>
+                                <span className="block text-[10px] text-gray-500">30-day return policy</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
+                            <ShieldCheck className="w-5 h-5 text-[#0E5B3D]" />
+                            <div>
+                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200">Secure Payment</span>
+                                <span className="block text-[10px] text-gray-500">100% encrypted checkout</span>
                             </div>
                         </div>
                     </div>
-
-                    <div className="text-sm">
-                        <p className="font-bold mb-2">About this item</p>
-                        <div className="text-gray-700 dark:text-gray-300 space-y-2 dangerously-set-inner-html" dangerouslySetInnerHTML={{ __html: formatDescription(product.description || "") }} />
-                    </div>
-                </div>
-
-                {/* Buyer Reviews Bunch */}
-                <div className="md:col-span-5 md:order-1 order-4 -mt-4">
-                    <BuyerReviews 
-                        reviews={product.buyerReviews || []} 
-                        averageRating={product.rating} 
-                        totalReviews={product.reviews} 
-                    />
                 </div>
             </div>
 
-            {/* NEW: Frequently Bought Together (Upsell Section) */}
-            {relatedProducts.length > 0 && (
-                <div className="mt-16 border-t border-gray-100 dark:border-gray-800 pt-16">
-                    <div className="flex items-center justify-between mb-8">
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Frequently Bought Together</h2>
-                            <p className="text-gray-500 text-sm">Customers who viewed this also bought these related items.</p>
-                        </div>
-                        <div className="hidden md:flex gap-2">
-                            <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 text-[10px] font-bold uppercase px-2 py-1 rounded">Bundle & Save 10%</div>
-                        </div>
+            {/* Product Description Section */}
+            <div className="mt-12 border-t border-gray-100 dark:border-gray-800 pt-10">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Product Details</h2>
+                <div className="text-sm text-gray-700 dark:text-gray-300 space-y-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: formatDescription(product.description || "") }} />
+            </div>
+
+            {/* Buyer Reviews Section */}
+            <div className="mt-12 border-t border-gray-100 dark:border-gray-800 pt-10">
+                <BuyerReviews 
+                    reviews={product.buyerReviews || []} 
+                    averageRating={product.rating} 
+                    totalReviews={product.reviews} 
+                />
+            </div>
+
+            {/* Similar Items Section (AliExpress recommendation rail) */}
+            <div className="mt-14 border-t border-gray-100 dark:border-gray-800 pt-10">
+                <div className="flex items-end justify-between mb-6">
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Similar Items</h2>
+                        <p className="text-gray-500 text-sm mt-1">You may also like these related products</p>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                    <div className="hidden md:block bg-[#74D644]/20 text-[#0E5B3D] dark:text-[#74D644] text-[10px] font-bold uppercase px-3 py-1.5 rounded-full">
+                        Recommended for you
+                    </div>
+                </div>
+                {relatedProducts.length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
                         {relatedProducts.map((p) => (
                             <ProductCard key={p.id} product={p} />
                         ))}
                     </div>
-                </div>
-            )}
+                ) : (
+                    <div className="bg-gray-50 dark:bg-gray-900/40 rounded-2xl p-8 text-center text-gray-400 text-sm">
+                        More items from this collection are on their way. Check back soon!
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

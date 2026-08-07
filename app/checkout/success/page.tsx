@@ -113,7 +113,7 @@ function CheckoutSuccessContent() {
                             Continue Shopping <ArrowRight className="w-5 h-5" />
                         </Link>
                         <Link
-                            href="#"
+                            href="/track-order"
                             className="text-gray-500 dark:text-gray-400 font-medium hover:text-gray-900 dark:hover:text-white transition-colors"
                         >
                             View Order Details

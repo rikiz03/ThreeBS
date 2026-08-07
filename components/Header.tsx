@@ -131,7 +131,7 @@ export default function Header() {
                         {/* Delivery Time Badge (From Mockup) */}
                         <div className="hidden lg:flex items-center gap-3 bg-black/20 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
                             <div className="w-2 h-2 rounded-full bg-[#74D644] animate-ping" />
-                            <span className="text-xs font-bold text-lime-300">Free shipping on orders over $50!</span>
+<span className="text-xs font-bold text-lime-300">Worldwide shipping included!</span>
                         </div>
 
                         {/* Auth Button */}

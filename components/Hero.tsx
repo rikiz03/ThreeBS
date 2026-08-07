@@ -20,7 +20,7 @@ export default function Hero() {
                     <p className="text-blue-100 mb-8 max-w-sm">
                         {t('iphone_desc')}
                     </p>
-                    <Link href="#" className="inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-full font-bold hover:bg-blue-50 transition-colors">
+                    <Link href="/category/electronics" className="inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-full font-bold hover:bg-blue-50 transition-colors">
                         {t('shop_now')} <ArrowRight className="w-4 h-4" />
                     </Link>
                 </div>
@@ -46,7 +46,7 @@ export default function Hero() {
                     <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-4">{t('sale')}</span>
                     <div className="text-5xl font-bold mb-2">50% <span className="text-2xl">{t('off')}</span></div>
                     <h3 className="text-xl font-medium mb-4">{t('shoes_title')}</h3>
-                    <Link href="#" className="text-white underline hover:text-blue-400">{t('shop_sale')}</Link>
+                    <Link href="/category/sports-gear" className="text-white underline hover:text-blue-400">{t('shop_sale')}</Link>
                 </div>
             </div>
         </div>

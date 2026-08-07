@@ -208,14 +208,14 @@ export default function PromoBanners() {
                     </p>
 
                     <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                        <Link href="#google-play" className="bg-black/40 hover:bg-black/60 border border-white/20 px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 shadow-lg group">
+<Link href="/#products-section" className="bg-black/40 hover:bg-black/60 border border-white/20 px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 shadow-lg group">
                             <Image src="https://placehold.co/30x30/png?text=GP" alt="Google Play" width={28} height={28} className="rounded-md" />
                             <div className="text-left">
                                 <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold leading-none">Get it on</p>
                                 <p className="text-sm font-black text-white leading-tight mt-0.5">Google Play</p>
                             </div>
                         </Link>
-                        <Link href="#app-store" className="bg-black/40 hover:bg-black/60 border border-white/20 px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 shadow-lg group">
+<Link href="/#products-section" className="bg-black/40 hover:bg-black/60 border border-white/20 px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 shadow-lg group">
                             <Image src="https://placehold.co/30x30/png?text=AS" alt="App Store" width={28} height={28} className="rounded-md" />
                             <div className="text-left">
                                 <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold leading-none">Download on the</p>

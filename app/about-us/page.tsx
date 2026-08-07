@@ -34,8 +34,8 @@ export default function AboutUs() {
                     <li>
                         <strong>Worldwide Shipping:</strong> While we target and optimize delivery lines for the US and Europe, we ship to customers all over the world.
                     </li>
-                    <li>
-                        <strong>24/7 Dedicated Support:</strong> Our support desk is always online. For any inquiries, reach us at <a href="mailto:support@threebrothersstores.com" className="text-[#0E5B3D] hover:underline font-bold">support@threebrothersstores.com</a>.
+<li>
+                        <strong>24/7 Dedicated Support:</strong> Our support desk is always online. For any inquiries, reach us at <a href="mailto:support@threebrotherstores.com" className="text-[#0E5B3D] hover:underline font-bold">support@threebrotherstores.com</a>.
                     </li>
                 </ul>
 

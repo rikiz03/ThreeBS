@@ -44,15 +44,15 @@ export default function DesktopActionPanel({ product }: DesktopActionPanelProps)
                 {/* Shipping & Warranty Info Row */}
                 <div className="flex flex-wrap gap-6 text-sm text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-6">
                     <div className="flex items-center gap-2">
-                        <Truck className="w-5 h-5 text-teal-600" />
+                        <Truck className="w-5 h-5 text-[#0E5B3D]" />
                         <div>
-                            <span className="block font-bold text-teal-700 dark:text-teal-500">Free Worldwide Shipping</span>
-                            <span className="text-[10px] opacity-70">Tracked & Insured Delivery</span>
+                            <span className="block font-bold text-[#0E5B3D] dark:text-[#74D644]">Worldwide Shipping</span>
+                            <span className="text-[10px] opacity-70">Shipping included in price</span>
                         </div>
                     </div>
                     {currentShippingTime && (
                         <div className="flex items-center gap-2">
-                            <Zap className="w-5 h-5 text-yellow-600" />
+                            <Zap className="w-5 h-5 text-[#74D644]" />
                             <div>
                                 <span className="block font-bold">Est. Delivery</span>
                                 <span className="text-[10px] opacity-70">{currentShippingTime} days</span>
@@ -61,11 +61,11 @@ export default function DesktopActionPanel({ product }: DesktopActionPanelProps)
                     )}
                 </div>
 
-                {/* Primary Action Row */}
+                {/* Primary Action Row - Brand colors */}
                 <div className="flex gap-4">
                     <button
                         onClick={handleAddToCart}
-                        className="flex-1 flex items-center justify-center gap-2 bg-gray-900 dark:bg-white dark:text-black text-white font-bold py-4 rounded-full hover:scale-[1.02] transition-all active:scale-95 shadow-lg"
+                        className="flex-1 flex items-center justify-center gap-2 bg-[#0E5B3D] hover:bg-[#0a4a33] text-white font-black py-4 rounded-full hover:scale-[1.02] transition-all active:scale-95 shadow-lg uppercase tracking-wide"
                     >
                         <ShoppingCart className="w-5 h-5" />
                         Add to Cart
@@ -75,7 +75,7 @@ export default function DesktopActionPanel({ product }: DesktopActionPanelProps)
                             handleAddToCart();
                             window.location.href = '/checkout';
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 rounded-full hover:scale-[1.02] transition-all active:scale-95 shadow-md"
+                        className="flex-1 flex items-center justify-center gap-2 bg-[#74D644] hover:bg-lime-400 text-[#0E5B3D] font-black py-4 rounded-full hover:scale-[1.02] transition-all active:scale-95 shadow-md uppercase tracking-wide"
                     >
                         Buy Now
                     </button>
@@ -86,7 +86,7 @@ export default function DesktopActionPanel({ product }: DesktopActionPanelProps)
                     <div className="flex items-center gap-1.5">
                         <Lock className="w-3.5 h-3.5" />
                         <span>Secure Payment</span>
-                        <span className="text-teal-600 ml-1">● Encrypted</span>
+                        <span className="text-[#0E5B3D] ml-1">● Encrypted</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                         <span>Ships from:</span>

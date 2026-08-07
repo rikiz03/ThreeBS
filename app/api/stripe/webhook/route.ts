@@ -52,6 +52,39 @@ export async function POST(req: NextRequest) {
                 console.log(`Checkout session expired: ${expiredSession.id}`);
                 break;
             }
+            case 'payment_intent.payment_failed': {
+                const failedIntent = event.data.object;
+                console.log(`Payment failed for PaymentIntent: ${failedIntent.id}, order: ${failedIntent.metadata?.orderId || 'unknown'}`);
+                // Notify the store owner about the failed payment so they can follow up with the customer
+                sendEmailNotification({
+                    orderId: failedIntent.metadata?.orderId || failedIntent.id,
+                    total: (failedIntent.amount || 0) / 100,
+                    fullName: failedIntent.metadata?.fullName || 'Guest',
+                    city: failedIntent.metadata?.city || 'Unknown',
+                    countryCode: 'US',
+                    items: []
+                }).catch((err: unknown) => console.error('Failed-payment email notification failed:', err));
+                break;
+            }
+            case 'charge.dispute.created': {
+                const dispute = event.data.object;
+                console.log(`Dispute created: ${dispute.id} for charge ${dispute.charge}`);
+                // Fees are deducted by Stripe; alert the store owner about a chargeback so they can respond
+                sendEmailNotification({
+                    orderId: dispute.payment_intent || dispute.id,
+                    total: (dispute.amount || 0) / 100,
+                    fullName: dispute.billing_details?.name || 'Guest',
+                    city: dispute.billing_details?.address?.city || 'Unknown',
+                    countryCode: dispute.billing_details?.address?.country || 'US',
+                    items: []
+                }).catch((err: unknown) => console.error('Dispute email notification failed:', err));
+                break;
+            }
+            case 'charge.refunded': {
+                const refund = event.data.object;
+                console.log(`Charge refunded: ${refund.id}, status: ${refund.status}`);
+                break;
+            }
             default:
                 console.log(`Unhandled event type: ${event.type}`);
         }

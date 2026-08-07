@@ -1,44 +1,22 @@
 # TODO
 
-## Task: Fix Footer Email, Category Images & Cart Quantity
+## Task 1: Fix Footer Email & Category Images ✅
+- [x] Footer email → `support@threebrotherstores.com`
+- [x] Category images → semantic fallback images
 
-### Step 1: Fix Footer Email ✅
-- [x] Edit `components/Footer.tsx` - Change `support@threebrothersstores.com` → `support@threebrotherstores.com`
-- [x] Edit `app/layout.tsx` - Fix JSON-LD structured data email to `support@threebrotherstores.com`
+## Task 2: Stripe Readiness Code Fixes
 
-### Step 2: Fix Category Images Fallback ✅
-- [x] Edit `lib/data.ts` - Replace "No Image" placeholder with dynamic Unsplash image based on category name in `getCategories()` and `getCategory()`
+### Content/Link Fixes
+- [x] 1. Fix About page email → `support@threebrotherstores.com`
+- [x] 2. Fix dead Google Play/App Store links in PromoBanners
+- [x] 3. Fix dead links in Hero.tsx
+- [x] 4. Fix dead "View Order Details" link on checkout success
+- [x] 5. Fix inflated fake discounts in `lib/data.ts`
+- [x] 6. Make "Free Shipping" messaging consistent
 
-### Step 3: Fix Cart Quantity Increment ✅
-- [x] Edit `components/ProductCard.tsx` - Sum quantities instead of counting entries in `cartItemCount`
-- [x] Edit `components/Header.tsx` - Cart badge shows total quantity sum
-- [x] Edit `app/checkout/page.tsx` - Checkout header and order summary show total quantity
+### Stripe Technical Fixes
+- [x] 7. Send cart metadata to Stripe Checkout Session
+- [x] 8. Add dispute & failed-payment handling to webhook
 
-### Step 4: Live Testing ✅
-- [x] Footer email renders correctly (single "s")
-- [x] Category images use dynamic Unsplash URLs (no "No Image" placeholder)
-- [x] Old double-s email removed from JSON-LD structured data
-- [x] Cart quantity increment verified by user (1 → 2 → 3... works)
-
-### Step 5: Update Tawk.to Chat Widget ✅
-- [x] Edit `app/layout.tsx` - Replace old Tawk.to embed ID with new URL `https://embed.tawk.to/6a5bbffe1c52dc1d4c7edb33/1jtr6buqv`
-
-## Task: AliExpress-Style Product Page with Working Variant Selection
-
-### Step 6: Update Types ✅
-- [x] Edit `lib/types.ts` - Add `images?: string[]` to `Product` interface for gallery support
-
-### Step 7: Fix Variant Data Layer ✅
-- [x] Edit `lib/data.ts` - Derive attributes from variations when product-level attributes are missing; populate `images` from gallery + variant images
-
-### Step 8: Create ProductGallery Component ✅
-- [x] Create `components/ProductGallery.tsx` - AliExpress-style gallery with main image + thumbnail strip synced to cart store
-
-### Step 9: Update Product Page ✅
-- [x] Edit `app/product/[id]/page.tsx` - Replace single SyncedProductImage with ProductGallery
-
-### Step 10: Enhance BuyBox Variant UI ✅
-- [x] Edit `components/BuyBox.tsx` - Show price per variant option, ensure derived attributes work with selector UI
-
-### Step 11: Test ✅
-- [x] Verify product page renders correctly with gallery, variant selectors, and dynamic pricing
+## Verification
+- [ ] Run build / type check to confirm no errors

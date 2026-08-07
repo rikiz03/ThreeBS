@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Truck, Lock, AlertCircle, Loader2, ChevronRight, Check, ShieldCheck } from 'lucide-react';
+import { Truck, Lock, AlertCircle, Loader2, Check, ShieldCheck, Minus, Plus, Zap } from 'lucide-react';
 import { useCartStore, useSettingsStore } from '@/lib/store';
 import { formatPrice } from '@/lib/geo';
 import { Product } from '@/lib/types';
@@ -17,6 +17,7 @@ export default function BuyBox({ product }: BuyBoxProps) {
     
     const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
     const [selectedVariant, setSelectedVariant] = useState<any>(null);
+    const [quantity, setQuantity] = useState(1);
     const [shippingFee, setShippingFee] = useState<number | null>(null);
     const [shippingTime, setShippingTime] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -146,6 +147,7 @@ export default function BuyBox({ product }: BuyBoxProps) {
     // We subtract the $10 estimate already included in the basePrice from the actual shippingFee
     const extraShipping = Math.max(0, (shippingFee || 0) - 10);
     const finalPrice = basePrice + extraShipping;
+    const totalPrice = finalPrice * quantity;
 
     const handleAddToCart = () => {
         if (error) return;
@@ -155,7 +157,7 @@ export default function BuyBox({ product }: BuyBoxProps) {
             title: selectedVariant ? `${product.title} (${selectedVariant.attributes.map((a: any) => a.option).join(', ')})` : product.title,
             price: basePrice,
             image: selectedVariant?.image || product.image,
-            quantity: 1,
+            quantity,
             supplier: product.supplier,
             externalId: product.externalId
         });
@@ -164,8 +166,8 @@ export default function BuyBox({ product }: BuyBoxProps) {
 
     if (loading) {
         return (
-            <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-8 shadow-sm bg-white dark:bg-[#121212] flex flex-col items-center justify-center gap-3">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-8 shadow-sm bg-white dark:bg-[#121212] flex flex-col items-center justify-center gap-3">
+                <Loader2 className="w-8 h-8 animate-spin text-[#0E5B3D]" />
                 <p className="text-sm text-gray-500">Calculating best shipping rates...</p>
             </div>
         );
@@ -185,27 +187,36 @@ export default function BuyBox({ product }: BuyBoxProps) {
                 </div>
                 <div className="h-px bg-red-200 dark:bg-red-800/30 w-full"></div>
                 <p className="text-sm text-red-600 dark:text-red-300 leading-relaxed">
-                    We apologize, but this product is currently <b>exclusive to our USA Warehouse</b> and cannot be shipped to <b>{countryCode}</b> at this time.
+We apologize, but this product is currently <b>exclusive to our USA Warehouse</b> and cannot be shipped to <b>{countryCode}</b> at this time.
                 </p>
                 <div className="mt-2 p-3 bg-white/50 dark:bg-black/20 rounded-lg text-xs text-red-500 font-medium">
-                    Please browse our "Global Hub" category for items available for international tracked delivery to your region.
+{`Please browse our "Global Hub" category for items available for international tracked delivery to your region.`}
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 shadow-sm bg-white dark:bg-[#121212]">
-            {/* Price Header */}
-            <div className="flex items-baseline gap-2 mb-4">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {formatPrice(finalPrice, currency)}
-                </div>
-                {product.originalPrice && (
-                    <div className="text-sm text-gray-400 line-through">
-                        {formatPrice(product.originalPrice + (shippingFee || 0), currency)}
+        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm bg-white dark:bg-[#121212]">
+            {/* Price Header - AliExpress style */}
+            <div className="bg-[#0E5B3D]/5 dark:bg-[#0E5B3D]/10 rounded-xl p-4 mb-4 flex items-center gap-3">
+                <div className="flex-1">
+                    <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-black text-[#0E5B3D] dark:text-[#74D644]">
+                            {formatPrice(finalPrice, currency)}
+                        </span>
+                        {product.originalPrice && (
+                            <span className="text-sm text-gray-400 line-through">
+                                {formatPrice(product.originalPrice + (shippingFee || 0), currency)}
+                            </span>
+                        )}
                     </div>
-                )}
+                    {product.originalPrice && (
+                        <div className="mt-1 inline-block bg-[#74D644] text-[#0E5B3D] text-[10px] font-black px-2 py-0.5 rounded">
+                            SAVE {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Mobile-Only Product Image */}
@@ -220,7 +231,7 @@ export default function BuyBox({ product }: BuyBoxProps) {
                 />
             </div>
 
-            {/* Selection UI */}
+            {/* Selection UI - AliExpress order */}
             {product.attributes && product.attributes.length > 0 && (
                 <div className="space-y-5 mb-6 border-b border-gray-100 dark:border-gray-800 pb-6">
                     {product.attributes.map((attr) => {
@@ -229,12 +240,9 @@ export default function BuyBox({ product }: BuyBoxProps) {
                         return (
                             <div key={attr.name}>
                                 <div className="flex justify-between items-center mb-2.5">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
-                                        Select {attr.name}
+                                    <label className="text-xs font-bold text-gray-700 dark:text-gray-200">
+                                        {attr.name}: <span className="text-[#0E5B3D] dark:text-[#74D644] font-black">{selectedAttributes[attr.name]}</span>
                                     </label>
-                                    <span className="text-[11px] font-medium text-gray-900 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                                        {selectedAttributes[attr.name]}
-                                    </span>
                                 </div>
                                 <div className="flex flex-wrap gap-2.5">
                                     {attr.options.map((opt) => {
@@ -244,53 +252,50 @@ export default function BuyBox({ product }: BuyBoxProps) {
                                         if (optImage) {
                                             const optionPrice = getOptionPrice(attr.name, opt);
                                             return (
-                                                <div key={opt} className="flex flex-col items-center gap-1">
-                                                    <button
-                                                        onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
-                                                        className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 ${
-                                                            isActive 
-                                                            ? 'border-blue-600 ring-2 ring-blue-600/20 shadow-md' 
-                                                            : 'border-gray-100 hover:border-gray-300'
-                                                        }`}
-                                                        title={opt}
-                                                    >
-                                                        <Image 
-                                                            src={optImage} 
-                                                            alt={opt} 
-                                                            fill 
-                                                            unoptimized
-                                                            className="object-cover"
-                                                        />
-                                                        {isActive && (
-                                                            <div className="absolute inset-0 bg-blue-600/10 flex items-center justify-center">
-                                                                <Check className="w-5 h-5 text-blue-600 drop-shadow-sm" />
-                                                            </div>
-                                                        )}
-                                                    </button>
-                                                    <span className={`text-[9px] font-bold ${isActive ? 'text-[#0E5B3D]' : 'text-gray-400'}`}>
-                                                        {formatPrice(optionPrice ?? basePrice, currency)}
-                                                    </span>
-                                                </div>
+                                                <button
+                                                    key={opt}
+                                                    onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
+                                                    className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition-all hover:scale-105 active:scale-95 ${
+                                                        isActive 
+                                                        ? 'border-[#0E5B3D] ring-2 ring-[#0E5B3D]/20 shadow-md' 
+                                                        : 'border-gray-100 hover:border-gray-300'
+                                                    }`}
+                                                    title={opt}
+                                                >
+                                                    <Image 
+                                                        src={optImage} 
+                                                        alt={opt} 
+                                                        fill 
+                                                        unoptimized
+                                                        className="object-cover"
+                                                    />
+                                                    {isActive && (
+                                                        <div className="absolute inset-0 bg-[#0E5B3D]/10 flex items-center justify-center">
+                                                            <Check className="w-5 h-5 text-[#0E5B3D] drop-shadow-sm" />
+                                                        </div>
+                                                    )}
+                                                </button>
                                             );
                                         }
 
                                         const optionPrice = getOptionPrice(attr.name, opt);
                                         return (
-                                            <div key={opt} className="flex flex-col items-center">
-                                                <button
-                                                    onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
-                                                    className={`px-4 py-2 text-xs rounded-lg border transition-all hover:bg-gray-50 active:scale-95 ${
-                                                        isActive
-                                                            ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600 font-bold'
-                                                            : 'border-gray-200 text-gray-600 bg-white'
-                                                    }`}
-                                                >
-                                                    {opt}
-                                                </button>
-                                                <span className={`text-[9px] font-bold mt-0.5 ${isActive ? 'text-[#0E5B3D]' : 'text-gray-400'}`}>
-                                                    {formatPrice(optionPrice ?? basePrice, currency)}
-                                                </span>
-                                            </div>
+                                            <button
+                                                key={opt}
+                                                onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}
+                                                className={`px-4 py-2 text-xs rounded-lg border transition-all hover:bg-gray-50 active:scale-95 ${
+                                                    isActive
+                                                        ? 'border-[#0E5B3D] bg-[#0E5B3D] text-white ring-1 ring-[#0E5B3D] font-bold'
+                                                        : 'border-gray-200 text-gray-600 bg-white'
+                                                }`}
+                                            >
+                                                {opt}
+                                                {optionPrice && (
+                                                    <span className={`ml-1.5 text-[10px] font-black ${isActive ? 'text-[#74D644]' : 'text-gray-400'}`}>
+                                                        {formatPrice(optionPrice, currency)}
+                                                    </span>
+                                                )}
+                                            </button>
                                         );
                                     })}
                                 </div>
@@ -300,26 +305,49 @@ export default function BuyBox({ product }: BuyBoxProps) {
                 </div>
             )}
 
-            {/* Shipping & Warranty Info */}
-            <div className="text-sm text-gray-500 mb-6 flex flex-col gap-2 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-xl">
-                <span className="text-teal-600 font-medium flex items-center gap-1">
-                    <Truck className="w-4 h-4" /> Free Worldwide Shipping
-                </span>
-                <span className="text-[11px] text-gray-500 flex items-center gap-1 ml-5">
-                    <ShieldCheck className="w-4 h-4 text-gray-400" /> Warranty: No warranty provided
-                </span>
-                {shippingTime && (
-                    <span className="text-[11px] text-gray-400 ml-5">
-                        Est. Delivery: {shippingTime} days
-                    </span>
-                )}
+            {/* Quantity Selector - AliExpress style */}
+            <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+                <span className="text-xs font-bold text-gray-700 dark:text-gray-200">Quantity</span>
+                <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-2 py-1">
+                    <button
+                        onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                        className="w-7 h-7 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:border-[#0E5B3D] hover:text-[#0E5B3D] transition-colors"
+                        aria-label="Decrease quantity"
+                    >
+                        <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="w-6 text-center text-sm font-black text-gray-900 dark:text-white">{quantity}</span>
+                    <button
+                        onClick={() => setQuantity(q => q + 1)}
+                        className="w-7 h-7 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:border-[#0E5B3D] hover:text-[#0E5B3D] transition-colors"
+                        aria-label="Increase quantity"
+                    >
+                        <Plus className="w-3.5 h-3.5" />
+                    </button>
+                </div>
             </div>
 
-            {/* Buy Buttons */}
+            {/* Shipping & Warranty Info - AliExpress box */}
+            <div className="rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/40 p-3 mb-6">
+<div className="flex items-center gap-2 text-[#0E5B3D] dark:text-[#74D644] font-bold text-sm">
+                    <Truck className="w-4 h-4" /> Worldwide Shipping Included
+                </div>
+                {shippingTime && (
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-1.5 ml-1">
+                        <Zap className="w-3.5 h-3.5 text-[#74D644]" />
+                        Estimated delivery: <span className="font-bold text-gray-700 dark:text-gray-300">{shippingTime} days</span>
+                    </div>
+                )}
+                <div className="flex items-center gap-1.5 text-[11px] text-gray-400 mt-1.5 ml-1">
+                    <ShieldCheck className="w-3.5 h-3.5" /> No warranty provided
+                </div>
+            </div>
+
+            {/* Buy Buttons - Brand colors */}
             <div className="space-y-3">
                 <button
                     onClick={handleAddToCart}
-                    className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-full transition-all shadow-lg active:scale-95"
+                    className="w-full bg-[#0E5B3D] hover:bg-[#0a4a33] text-white font-black py-4 rounded-full transition-all shadow-lg active:scale-95 uppercase tracking-wide"
                 >
                     Add to Cart
                 </button>
@@ -329,20 +357,31 @@ export default function BuyBox({ product }: BuyBoxProps) {
                         handleAddToCart();
                         window.location.href = '/checkout';
                     }}
-                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 rounded-full transition-all shadow-md active:scale-95"
+                    className="w-full bg-[#74D644] hover:bg-lime-400 text-[#0E5B3D] font-black py-4 rounded-full transition-all shadow-md active:scale-95 uppercase tracking-wide"
                 >
                     Buy Now
                 </button>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-500 space-y-2">
-                <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1"><Lock className="w-3 h-3" /> Secure Payment</span>
-                    <span className="font-medium text-gray-900 dark:text-gray-200">Encrypted</span>
+            {/* Total row */}
+            <div className="mt-4 flex items-center justify-between text-sm">
+                <span className="text-gray-500">Total ({quantity} item{quantity > 1 ? 's' : ''})</span>
+                <span className="text-lg font-black text-[#0E5B3D] dark:text-[#74D644]">{formatPrice(totalPrice, currency)}</span>
+            </div>
+
+            {/* Trust badges */}
+            <div className="mt-5 pt-5 border-t border-gray-100 dark:border-gray-800 grid grid-cols-3 gap-2 text-[10px] font-bold text-gray-500 text-center">
+                <div className="flex flex-col items-center gap-1">
+                    <Lock className="w-4 h-4 text-[#0E5B3D]" />
+                    <span>Secure Payment</span>
                 </div>
-                <div className="flex justify-between">
-                    <span>Ships from</span>
-                    <span className="font-medium text-gray-900 dark:text-gray-200">{countryCode === 'US' ? 'USA' : 'Global Hub (CN)'}</span>
+                <div className="flex flex-col items-center gap-1">
+                    <ShieldCheck className="w-4 h-4 text-[#0E5B3D]" />
+                    <span>30-Day Returns</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                    <Truck className="w-4 h-4 text-[#0E5B3D]" />
+                    <span>Tracked Shipping</span>
                 </div>
             </div>
         </div>

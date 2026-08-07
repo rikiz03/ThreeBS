@@ -92,8 +92,37 @@ const CATEGORY_FALLBACK_KEYWORDS: Record<string, string> = {
     'auto': 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&h=400&fit=crop',
     'car': 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&h=400&fit=crop',
     'music': 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&h=400&fit=crop',
-    'book': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&h=400&fit=crop',
+'book': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&h=400&fit=crop',
     'toy': 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?q=80&w=400&h=400&fit=crop',
+    'gadget': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=400&h=400&fit=crop',
+    'digital': 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&h=400&fit=crop',
+    'computer': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&h=400&fit=crop',
+    'laptop': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&h=400&fit=crop',
+    'accessor': 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=400&h=400&fit=crop',
+    'jewelry': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=400&h=400&fit=crop',
+    'watch': 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=400&h=400&fit=crop',
+'shoe': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&h=400&fit=crop',
+    'sneaker': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&h=400&fit=crop',
+    'bag': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&h=400&fit=crop',
+    'handbag': 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=400&h=400&fit=crop',
+    'kitchen': 'https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=400&h=400&fit=crop',
+    'cook': 'https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=400&h=400&fit=crop',
+    'food': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=400&h=400&fit=crop',
+    'furniture': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=400&h=400&fit=crop',
+    'decor': 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=400&h=400&fit=crop',
+    'light': 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=400&h=400&fit=crop',
+    'pet': 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=400&h=400&fit=crop',
+    'animal': 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?q=80&w=400&h=400&fit=crop',
+'baby': 'https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=400&h=400&fit=crop',
+    'office': 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=400&h=400&fit=crop',
+    'stationery': 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?q=80&w=400&h=400&fit=crop',
+'tool': 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=400&h=400&fit=crop',
+    'plant': 'https://images.unsplash.com/photo-1463320726281-696a485928c7?q=80&w=400&h=400&fit=crop',
+'travel': 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=400&h=400&fit=crop',
+    'luggage': 'https://images.unsplash.com/photo-1553531384-cc64ac80f931?q=80&w=400&h=400&fit=crop',
+    'security': 'https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=400&h=400&fit=crop',
+    'camera': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&h=400&fit=crop',
+    'photography': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&h=400&fit=crop',
 };
 
 function getCategoryFallbackImage(name: string): string {
@@ -101,8 +130,8 @@ function getCategoryFallbackImage(name: string): string {
     for (const [keyword, url] of Object.entries(CATEGORY_FALLBACK_KEYWORDS)) {
         if (lower.includes(keyword)) return url;
     }
-    // Ultimate fallback: branded colored placeholder (never a broken image)
-    return `https://placehold.co/400x400/0E5B3D/FFFFFF/png?text=${encodeURIComponent(name.replace(/\s+/g, '+'))}`;
+    // Ultimate fallback: a generic retail/shopping Unsplash image (never a broken image or green block)
+    return 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=400&h=400&fit=crop';
 }
 
 export const FEATURED_CATEGORIES: Category[] = [
@@ -236,11 +265,10 @@ export async function getProducts(params: Record<string, string | number> = {}):
 
             const { supplier, externalId } = identifySupplier(p.meta_data || []);
             const basePrice = applyPriceLogic(p.price);
-            let originalPrice = applyPriceLogic(p.regular_price);
-            
-            if (!originalPrice || originalPrice <= basePrice) {
-                originalPrice = basePrice * 1.67;
-            }
+            const regularPrice = applyPriceLogic(p.regular_price);
+            // Only show a strikethrough price when WooCommerce provides a legitimate higher regular_price.
+            // No artificial inflation (removed the basePrice * 1.67 fake discount).
+            const originalPrice = regularPrice && regularPrice > basePrice ? regularPrice : undefined;
 
             return {
                 id: p.id.toString(),
@@ -281,13 +309,10 @@ export async function getProduct(id: string): Promise<Product | null> {
 
         const { supplier, externalId } = identifySupplier(p.meta_data || []);
         
-        // If it's a variable product, we use the price if set, otherwise we'll wait for variants
+// If it's a variable product, we use the price if set, otherwise we'll wait for variants
         const basePrice = applyPriceLogic(p.price);
-        let originalPrice = applyPriceLogic(p.regular_price);
-
-        if (!originalPrice || originalPrice <= basePrice) {
-            originalPrice = basePrice * 1.67;
-        }
+        const regularPrice = applyPriceLogic(p.regular_price);
+        const originalPrice = regularPrice && regularPrice > basePrice ? regularPrice : undefined;
 
         let variants: Product['variants'] = [];
         let attributes = p.attributes?.map(attr => ({
@@ -384,10 +409,23 @@ export async function getProduct(id: string): Promise<Product | null> {
     }
 }
 
-export async function getRelatedProducts(categoryId: string, currentProductId: string): Promise<Product[]> {
+export async function getRelatedProducts(categoryName: string, currentProductId: string): Promise<Product[]> {
     try {
-        const products = await getProducts({ category: categoryId, per_page: 5 });
-        return products.filter(p => p.id !== currentProductId).slice(0, 4);
+        // Fetch a broad pool of products so we have enough to match against.
+        const pool = await getProducts({ per_page: 50, page: 1 });
+
+        // Prefer products that share the current product's category (semantic match).
+        const cat = (categoryName || '').toLowerCase();
+        let related = pool.filter(p => p.id !== currentProductId && (p.allCategories || []).some(c => c.toLowerCase() === cat || (cat && c.toLowerCase().includes(cat))));
+
+        // If we don't have enough same-category matches, fill from other popular products.
+        if (related.length < 4) {
+            const others = pool.filter(p => p.id !== currentProductId && !related.includes(p));
+            related = related.concat(others);
+        }
+
+        // Cap to 8, always return at least the top pool items (never empty).
+        return related.slice(0, 8);
     } catch (error) {
         return [];
     }
