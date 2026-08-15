@@ -146,7 +146,12 @@ export default function Header() {
                                     </SignInButton>
                                 </SignedOut>
                                 <SignedIn>
-                                    <UserButton />
+                                    <div className="flex items-center gap-3">
+                                        <Link href="/admin" className="text-xs font-bold text-[#74D644] hover:text-white transition-colors border border-[#74D644]/40 rounded-full px-3 py-1.5">
+                                            Admin
+                                        </Link>
+                                        <UserButton />
+                                    </div>
                                 </SignedIn>
                             </div>
                         </div>

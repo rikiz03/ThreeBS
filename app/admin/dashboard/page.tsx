@@ -3,9 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import { useState, useEffect } from 'react';
 import { TrendingUp, DollarSign, ShoppingCart, Percent, ArrowUpRight } from 'lucide-react';
-
-// AUTHORIZED EMAILS
-const ADMIN_EMAILS = ['support@premiumvaluemarket.com', 'bestfindstoday24@gmail.com'];
+import { isAdmin } from '@/lib/owner';
 
 export default function AdminDashboard() {
     const { user, isLoaded } = useUser();
@@ -38,7 +36,7 @@ export default function AdminDashboard() {
         );
     }
 
-    if (!user || (!ADMIN_EMAILS.includes(userEmail || '') && user.id !== 'user_2ofO0tE5Y4uUvU5Fp9yS5FfE6Z8')) {
+    if (!user || !isAdmin({ emailAddress: userEmail, id: user.id })) {
         if (typeof window !== 'undefined') window.location.href = '/';
         return null;
     }
