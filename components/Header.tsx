@@ -131,13 +131,13 @@ export default function Header() {
 
             {/* Main Header */}
             <div className="container mx-auto px-4 py-4">
-                <div className="flex items-center justify-between gap-6 lg:gap-8">
+                <div className="flex items-center justify-between gap-3 md:gap-6 lg:gap-8">
                     {/* Logo / Brand Name */}
-                    <Link href="/" className="flex items-center gap-2 flex-shrink-0 group">
-                        <LogoIcon size={40} strokeColor="#74D644" fillColor="#0E5B3D" className="group-hover:scale-105 transition-transform" />
+                    <Link href="/" className="flex min-w-0 items-center gap-1 sm:gap-2 flex-shrink-0 group">
+                        <LogoIcon size={40} strokeColor="#74D644" fillColor="#0E5B3D" className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-105 transition-transform" />
                         <div className="flex flex-col">
-                            <span className="text-xl font-black tracking-tight leading-none text-white group-hover:text-[#74D644] transition-colors">
-                                Three Brothers Stores
+                            <span className="whitespace-nowrap text-xs sm:text-xl font-black tracking-tight leading-none text-white group-hover:text-[#74D644] transition-colors">
+                                Three Brother Stores
                             </span>
                         </div>
                     </Link>
@@ -158,7 +158,7 @@ export default function Header() {
                     </form>
 
                     {/* Right Actions */}
-                    <div className="flex items-center gap-4 lg:gap-6">
+                    <div className="flex items-center gap-2 sm:gap-4 lg:gap-6">
                         {/* Delivery Time Badge (From Mockup) */}
                         <div className="hidden lg:flex items-center gap-3 bg-black/20 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
                             <div className="w-2 h-2 rounded-full bg-[#74D644] animate-ping" />
@@ -253,6 +253,57 @@ export default function Header() {
                                 {cat.name}
                             </Link>
                         ))}
+
+                        <div className="border-t border-white/10 pt-4 space-y-4">
+                            <p className="text-xs font-bold uppercase tracking-wider text-lime-300">Store settings</p>
+                            <div className="grid grid-cols-2 gap-3">
+                                <label className="flex flex-col gap-1.5 text-xs font-semibold text-gray-200">
+                                    <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-[#74D644]" /> Language</span>
+                                    <select
+                                        aria-label="Select Language"
+                                        value={locale}
+                                        onChange={(e) => setLocale(e.target.value)}
+                                        className="w-full rounded-lg bg-white px-2 py-2 text-sm font-semibold text-gray-900 outline-none focus:ring-2 focus:ring-lime-300"
+                                    >
+                                        {Object.entries(LANGUAGES).map(([code, label]) => (
+                                            <option key={code} value={code}>{label}</option>
+                                        ))}
+                                    </select>
+                                </label>
+                                <label className="flex flex-col gap-1.5 text-xs font-semibold text-gray-200">
+                                    <span>Currency</span>
+                                    <select
+                                        aria-label="Select Currency"
+                                        value={currency}
+                                        onChange={(e) => setCurrency(e.target.value)}
+                                        className="w-full rounded-lg bg-white px-2 py-2 text-sm font-semibold text-gray-900 outline-none focus:ring-2 focus:ring-lime-300"
+                                    >
+                                        <option value="USD">USD ($)</option>
+                                        <option value="GBP">GBP (£)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="CAD">CAD (C$)</option>
+                                        <option value="AUD">AUD (A$)</option>
+                                        <option value="NGN">NGN (₦)</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <SignedOut>
+                                <SignInButton mode="modal">
+                                    <button type="button" className="w-full rounded-xl bg-[#74D644] px-4 py-3 text-sm font-black text-[#0E5B3D] transition-colors hover:bg-lime-300">
+                                        {t('sign_in')}
+                                    </button>
+                                </SignInButton>
+                            </SignedOut>
+                            <SignedIn>
+                                <div className="flex items-center justify-between rounded-xl bg-white/10 px-3 py-2">
+                                    <Link href="/admin" className="text-sm font-bold text-[#74D644] hover:text-white" onClick={() => setShowCategories(false)}>
+                                        Admin
+                                    </Link>
+                                    <UserButton />
+                                </div>
+                            </SignedIn>
+                        </div>
                     </div>
                 </div>
             )}
