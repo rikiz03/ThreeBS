@@ -32,12 +32,12 @@ export default function PromoBanners() {
             {/* 1. 4-Column Promotional Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                {/* Card 1: Fitness & Gym — Save $29 */}
+                {/* Card 1: Fitness & Gym — New Arrivals */}
                 <div className="bg-[#0E5B3D] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="z-10 max-w-[155px]">
-                        <p className="text-xs font-bold text-[#74D644] uppercase tracking-wider mb-1">Save</p>
-                        <h3 className="text-4xl font-black mb-1 text-white">$29</h3>
-                        <p className="text-[11px] text-green-100 leading-snug font-medium mb-3">On Fitness &amp; Home Gym gear this week</p>
+                        <p className="text-xs font-bold text-[#74D644] uppercase tracking-wider mb-1">New In</p>
+                        <h3 className="text-4xl font-black mb-1 text-white leading-none">Fitness &amp; Gym</h3>
+                        <p className="text-[11px] text-green-100 leading-snug font-medium mb-3">Fresh gear drops for your training goals</p>
                         <Link href="/category/fitness-gym" className="inline-flex items-center gap-1 text-[10px] font-black text-[#74D644] uppercase tracking-wider hover:gap-2 transition-all">
                             Shop now <ArrowRight className="w-3 h-3" />
                         </Link>
@@ -53,12 +53,12 @@ export default function PromoBanners() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#74D644]/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 </div>
 
-                {/* Card 2: Health & Beauty — 30% Off */}
+                {/* Card 2: Health & Beauty — Top Rated */}
                 <div className="bg-[#581443] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="z-10 max-w-[155px]">
-                        <p className="text-xs font-bold text-pink-300 uppercase tracking-wider mb-1">Discount</p>
-                        <h3 className="text-4xl font-black mb-1 text-white">30%</h3>
-                        <p className="text-[11px] text-pink-100 leading-snug font-medium mb-3">Off Health &amp; Beauty essentials</p>
+                        <p className="text-xs font-bold text-pink-300 uppercase tracking-wider mb-1">Top Rated</p>
+                        <h3 className="text-4xl font-black mb-1 text-white leading-none">Health &amp; Beauty</h3>
+                        <p className="text-[11px] text-pink-100 leading-snug font-medium mb-3">Customer favourites &amp; wellness essentials</p>
                         <Link href="/category/health-wellness" className="inline-flex items-center gap-1 text-[10px] font-black text-pink-300 uppercase tracking-wider hover:gap-2 transition-all">
                             Shop now <ArrowRight className="w-3 h-3" />
                         </Link>
@@ -74,12 +74,12 @@ export default function PromoBanners() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-pink-400/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 </div>
 
-                {/* Card 3: Home & Lifestyle — Up to 50% */}
+                {/* Card 3: Home & Lifestyle — Trending */}
                 <div className="bg-[#C26D38] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="z-10 max-w-[155px]">
-                        <p className="text-xs font-bold text-orange-200 uppercase tracking-wider mb-1">Up to</p>
-                        <h3 className="text-4xl font-black mb-1 text-white">50%</h3>
-                        <p className="text-[11px] text-orange-100 leading-snug font-medium mb-3">Off Home &amp; Lifestyle upgrades</p>
+                        <p className="text-xs font-bold text-orange-200 uppercase tracking-wider mb-1">Trending</p>
+                        <h3 className="text-4xl font-black mb-1 text-white leading-none">Home &amp; Living</h3>
+                        <p className="text-[11px] text-orange-100 leading-snug font-medium mb-3">Most-loved picks to upgrade your space</p>
                         <Link href="/category/home-lifestyle" className="inline-flex items-center gap-1 text-[10px] font-black text-orange-200 uppercase tracking-wider hover:gap-2 transition-all">
                             Shop now <ArrowRight className="w-3 h-3" />
                         </Link>
@@ -95,12 +95,12 @@ export default function PromoBanners() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-orange-300/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 </div>
 
-                {/* Card 4: Free Shipping — Creator Studio */}
+                {/* Card 4: Creator Studio — Best Sellers */}
                 <div className="bg-[#1C3A5E] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="z-10 max-w-[155px]">
-                        <p className="text-xs font-bold text-blue-300 uppercase tracking-wider mb-1">Free</p>
-                        <h3 className="text-4xl font-black mb-1 text-white">SHIP</h3>
-                        <p className="text-[11px] text-blue-100 leading-snug font-medium mb-3">On all Creator Studio orders worldwide</p>
+                        <p className="text-xs font-bold text-blue-300 uppercase tracking-wider mb-1">Best Sellers</p>
+                        <h3 className="text-4xl font-black mb-1 text-white leading-none">Creator Studio</h3>
+                        <p className="text-[11px] text-blue-100 leading-snug font-medium mb-3">Top picks for content creators worldwide</p>
                         <Link href="/category/creator-studio" className="inline-flex items-center gap-1 text-[10px] font-black text-blue-300 uppercase tracking-wider hover:gap-2 transition-all">
                             Shop now <ArrowRight className="w-3 h-3" />
                         </Link>
