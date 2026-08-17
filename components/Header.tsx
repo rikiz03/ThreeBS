@@ -235,24 +235,6 @@ export default function Header() {
                 <div data-dropdown-component="true" className="md:hidden absolute top-full left-0 right-0 bg-[#0E5B3D] border-t border-white/10 shadow-2xl z-[100] animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="container mx-auto px-4 py-4 space-y-3">
                         <Link href="/" className="block text-sm font-bold text-white hover:text-[#74D644]" onClick={() => setShowCategories(false)}>Home</Link>
-                        {[
-                            { name: 'Electronics', slug: 'electronics' },
-                            { name: 'Fashion', slug: 'fashion' },
-                            { name: 'Home & Garden', slug: 'home-garden' },
-                            { name: 'Beauty & Health', slug: 'beauty-health' },
-                            { name: 'Sports & Outdoors', slug: 'sports' },
-                            { name: 'Toys & Hobbies', slug: 'toys' },
-                            { name: 'Deals & Offers', slug: 'deals' }
-                        ].map((cat) => (
-                            <Link 
-                                key={`mobile-${cat.slug}`} 
-                                href={`/category/${cat.slug}`}
-                                className="block text-sm text-gray-200 hover:text-[#74D644] font-medium"
-                                onClick={() => setShowCategories(false)}
-                            >
-                                {cat.name}
-                            </Link>
-                        ))}
 
                         <div className="border-t border-white/10 pt-4 space-y-4">
                             <p className="text-xs font-bold uppercase tracking-wider text-lime-300">Store settings</p>
@@ -304,6 +286,25 @@ export default function Header() {
                                 </div>
                             </SignedIn>
                         </div>
+
+                        {[
+                            { name: 'Electronics', slug: 'electronics' },
+                            { name: 'Fashion', slug: 'fashion' },
+                            { name: 'Home & Garden', slug: 'home-garden' },
+                            { name: 'Beauty & Health', slug: 'beauty-health' },
+                            { name: 'Sports & Outdoors', slug: 'sports' },
+                            { name: 'Toys & Hobbies', slug: 'toys' },
+                            { name: 'Deals & Offers', slug: 'deals' }
+                        ].map((cat) => (
+                            <Link 
+                                key={`mobile-${cat.slug}`} 
+                                href={`/category/${cat.slug}`}
+                                className="block text-sm text-gray-200 hover:text-[#74D644] font-medium"
+                                onClick={() => setShowCategories(false)}
+                            >
+                                {cat.name}
+                            </Link>
+                        ))}
                     </div>
                 </div>
             )}
