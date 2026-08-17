@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Plus, Minus, ChevronRight, Star } from 'lucide-react';
+import { Plus, Minus, ChevronRight, Star, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 
 export default function PromoBanners() {
@@ -29,75 +29,93 @@ export default function PromoBanners() {
 
     return (
         <div className="space-y-16 py-8">
-            {/* 1. 4-Column Promotional Cards Grid (From Mockup) */}
+            {/* 1. 4-Column Promotional Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Card 1: Save $29 */}
+
+                {/* Card 1: Fitness & Gym — Save $29 */}
+                <div className="bg-[#0E5B3D] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="z-10 max-w-[155px]">
+                        <p className="text-xs font-bold text-[#74D644] uppercase tracking-wider mb-1">Save</p>
+                        <h3 className="text-4xl font-black mb-1 text-white">$29</h3>
+                        <p className="text-[11px] text-green-100 leading-snug font-medium mb-3">On Fitness &amp; Home Gym gear this week</p>
+                        <Link href="/category/fitness-gym" className="inline-flex items-center gap-1 text-[10px] font-black text-[#74D644] uppercase tracking-wider hover:gap-2 transition-all">
+                            Shop now <ArrowRight className="w-3 h-3" />
+                        </Link>
+                    </div>
+                    <div className="absolute -right-3 -bottom-3 w-44 h-44 group-hover:scale-110 transition-transform duration-500">
+                        <Image
+                            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=300&auto=format&fit=crop"
+                            alt="Fitness & Gym"
+                            fill
+                            className="object-contain opacity-90 drop-shadow-2xl"
+                        />
+                    </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#74D644]/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                </div>
+
+                {/* Card 2: Health & Beauty — 30% Off */}
                 <div className="bg-[#581443] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="z-10 max-w-[160px]">
-                        <p className="text-xs font-bold text-pink-300 uppercase tracking-wider mb-1">Save</p>
-                        <h3 className="text-4xl font-black mb-3 text-white">$29</h3>
-                        <p className="text-xs text-gray-200 leading-snug font-medium">Discover deals on trending products & top brands</p>
+                    <div className="z-10 max-w-[155px]">
+                        <p className="text-xs font-bold text-pink-300 uppercase tracking-wider mb-1">Discount</p>
+                        <h3 className="text-4xl font-black mb-1 text-white">30%</h3>
+                        <p className="text-[11px] text-pink-100 leading-snug font-medium mb-3">Off Health &amp; Beauty essentials</p>
+                        <Link href="/category/health-wellness" className="inline-flex items-center gap-1 text-[10px] font-black text-pink-300 uppercase tracking-wider hover:gap-2 transition-all">
+                            Shop now <ArrowRight className="w-3 h-3" />
+                        </Link>
                     </div>
-                    <div className="absolute -right-4 -bottom-4 w-40 h-40 group-hover:scale-110 transition-transform duration-500">
+                    <div className="absolute -right-3 -bottom-3 w-44 h-44 group-hover:scale-110 transition-transform duration-500">
                         <Image
-                            src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=300&auto=format&fit=crop"
-                            alt="Flour carton"
+                            src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?q=80&w=300&auto=format&fit=crop"
+                            alt="Health & Beauty"
                             fill
                             className="object-contain opacity-90 drop-shadow-2xl"
                         />
                     </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-pink-400/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 </div>
 
-                {/* Card 2: Discount 30% */}
+                {/* Card 3: Home & Lifestyle — Up to 50% */}
                 <div className="bg-[#C26D38] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="z-10 max-w-[160px]">
-                        <p className="text-xs font-bold text-orange-200 uppercase tracking-wider mb-1">Discount</p>
-                        <h3 className="text-4xl font-black mb-3 text-white">30%</h3>
-                        <p className="text-xs text-gray-200 leading-snug font-medium">Discover deals on trending products & top brands</p>
+                    <div className="z-10 max-w-[155px]">
+                        <p className="text-xs font-bold text-orange-200 uppercase tracking-wider mb-1">Up to</p>
+                        <h3 className="text-4xl font-black mb-1 text-white">50%</h3>
+                        <p className="text-[11px] text-orange-100 leading-snug font-medium mb-3">Off Home &amp; Lifestyle upgrades</p>
+                        <Link href="/category/home-lifestyle" className="inline-flex items-center gap-1 text-[10px] font-black text-orange-200 uppercase tracking-wider hover:gap-2 transition-all">
+                            Shop now <ArrowRight className="w-3 h-3" />
+                        </Link>
                     </div>
-                    <div className="absolute -right-4 -bottom-4 w-40 h-40 group-hover:scale-110 transition-transform duration-500">
+                    <div className="absolute -right-3 -bottom-3 w-44 h-44 group-hover:scale-110 transition-transform duration-500">
                         <Image
-                            src="https://images.unsplash.com/photo-1585060544812-6b45742d762f?q=80&w=300&auto=format&fit=crop"
-                            alt="Peanut butter"
+                            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=300&auto=format&fit=crop"
+                            alt="Home & Lifestyle"
                             fill
                             className="object-contain opacity-90 drop-shadow-2xl"
                         />
                     </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-orange-300/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 </div>
 
-                {/* Card 3: Up to 50% */}
-                <div className="bg-[#1C5282] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="z-10 max-w-[160px]">
-                        <p className="text-xs font-bold text-blue-200 uppercase tracking-wider mb-1">Up to</p>
-                        <h3 className="text-4xl font-black mb-3 text-white">50%</h3>
-                        <p className="text-xs text-gray-200 leading-snug font-medium">Discover deals on trending products & top brands</p>
+                {/* Card 4: Free Shipping — Creator Studio */}
+                <div className="bg-[#1C3A5E] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="z-10 max-w-[155px]">
+                        <p className="text-xs font-bold text-blue-300 uppercase tracking-wider mb-1">Free</p>
+                        <h3 className="text-4xl font-black mb-1 text-white">SHIP</h3>
+                        <p className="text-[11px] text-blue-100 leading-snug font-medium mb-3">On all Creator Studio orders worldwide</p>
+                        <Link href="/category/creator-studio" className="inline-flex items-center gap-1 text-[10px] font-black text-blue-300 uppercase tracking-wider hover:gap-2 transition-all">
+                            Shop now <ArrowRight className="w-3 h-3" />
+                        </Link>
                     </div>
-                    <div className="absolute -right-4 -bottom-4 w-40 h-40 group-hover:scale-110 transition-transform duration-500">
+                    <div className="absolute -right-3 -bottom-3 w-44 h-44 group-hover:scale-110 transition-transform duration-500">
                         <Image
-                            src="https://images.unsplash.com/photo-1550583724-b2692b85b150?q=80&w=300&auto=format&fit=crop"
-                            alt="Skippy peanut butter"
+                            src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=300&auto=format&fit=crop"
+                            alt="Creator Studio gear"
                             fill
                             className="object-contain opacity-90 drop-shadow-2xl"
                         />
                     </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-400/10 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 </div>
 
-                {/* Card 4: Free SHIP */}
-                <div className="bg-[#552C85] text-white rounded-3xl p-6 flex flex-col justify-between h-72 relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="z-10 max-w-[160px]">
-                        <p className="text-xs font-bold text-purple-200 uppercase tracking-wider mb-1">Free</p>
-                        <h3 className="text-4xl font-black mb-3 text-white">SHIP</h3>
-                        <p className="text-xs text-gray-200 leading-snug font-medium">Discover deals on trending products & top brands</p>
-                    </div>
-                    <div className="absolute -right-4 -bottom-4 w-40 h-40 group-hover:scale-110 transition-transform duration-500">
-                        <Image
-                            src="https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?q=80&w=300&auto=format&fit=crop"
-                            alt="Organic corn"
-                            fill
-                            className="object-contain opacity-90 drop-shadow-2xl"
-                        />
-                    </div>
-                </div>
             </div>
 
             {/* 2. Weekly Best Selling Items Section (From Mockup) */}
