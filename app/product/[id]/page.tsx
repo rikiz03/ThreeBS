@@ -10,6 +10,7 @@ import BuyerReviews from '@/components/BuyerReviews';
 import ProductGallery from '@/components/ProductGallery';
 import DesktopActionPanel from '@/components/DesktopActionPanel';
 import ProductCard from '@/components/ProductCard';
+import TranslatedText from '@/components/TranslatedText';
 import { getTranslation } from '@/lib/i18n';
 import { Metadata, ResolvingMetadata } from 'next';
 import { formatDescription } from '@/lib/text-utils';
@@ -133,7 +134,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 <div className="lg:col-span-7">
                     {/* Title */}
                     <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-snug mb-2">
-                        {product.title}
+                        <TranslatedText text={product.title} />
                     </h1>
 
                     {/* Rating + orders row */}
@@ -147,10 +148,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             <span className="text-sm font-bold text-[#0E5B3D] dark:text-[#74D644] ml-1">{product.rating.toFixed(1)}</span>
                         </div>
                         <span className="w-px h-4 bg-gray-200 dark:bg-gray-700"></span>
-                        <span className="text-sm text-gray-500 cursor-pointer hover:underline">{product.reviews} ratings</span>
+                        <span className="text-sm text-gray-500 cursor-pointer hover:underline">{product.reviews} <TranslatedText text="ratings" /></span>
                         <span className="w-px h-4 bg-gray-200 dark:bg-gray-700"></span>
                         <span className="text-sm text-gray-500">
-                            <span className="font-bold text-gray-700 dark:text-gray-300">{Math.max(product.reviews, 1) * 3}</span> sold
+                            <span className="font-bold text-gray-700 dark:text-gray-300">{Math.max(product.reviews, 1) * 3}</span> <TranslatedText text="sold" />
                         </span>
                     </div>
 
@@ -165,7 +166,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             )}
                         </div>
                         <div className="mt-2 text-[#0E5B3D] dark:text-[#74D644] text-sm font-medium flex items-center gap-1.5">
-                            <Truck className="w-4 h-4" /> Final Price - Includes Free Tracked Shipping
+                            <Truck className="w-4 h-4" /> <TranslatedText text="Final Price - Includes Free Tracked Shipping" />
                         </div>
                     </div>
 
@@ -177,22 +178,22 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                         <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
                             <Truck className="w-5 h-5 text-[#0E5B3D]" />
                             <div>
-                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200">Worldwide Tracking</span>
-                                <span className="block text-[10px] text-gray-500">Free tracked shipping</span>
+                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200"><TranslatedText text="Worldwide Tracking" /></span>
+                                <span className="block text-[10px] text-gray-500"><TranslatedText text="Free tracked shipping" /></span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
                             <RotateCcw className="w-5 h-5 text-[#0E5B3D]" />
                             <div>
-                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200">Hassle-Free Returns</span>
-                                <span className="block text-[10px] text-gray-500">30-day return policy</span>
+                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200"><TranslatedText text="Hassle-Free Returns" /></span>
+                                <span className="block text-[10px] text-gray-500"><TranslatedText text="30-day return policy" /></span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
                             <ShieldCheck className="w-5 h-5 text-[#0E5B3D]" />
                             <div>
-                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200">Secure Payment</span>
-                                <span className="block text-[10px] text-gray-500">100% encrypted checkout</span>
+                                <span className="block text-xs font-bold text-gray-800 dark:text-gray-200"><TranslatedText text="Secure Payment" /></span>
+                                <span className="block text-[10px] text-gray-500"><TranslatedText text="100% encrypted checkout" /></span>
                             </div>
                         </div>
                     </div>
@@ -201,7 +202,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
             {/* Product Description Section */}
             <div className="mt-12 border-t border-gray-100 dark:border-gray-800 pt-10">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Product Details</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4"><TranslatedText text="Product Details" /></h2>
                 <div className="text-sm text-gray-700 dark:text-gray-300 space-y-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: formatDescription(product.description || "") }} />
             </div>
 

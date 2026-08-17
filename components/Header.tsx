@@ -1,13 +1,14 @@
 'use client';
 
-import { Search, ShoppingCart, User, MapPin, Menu, ChevronDown, Clock, CheckCircle } from 'lucide-react';
+import { Search, ShoppingCart, User, MapPin, Menu, ChevronDown, Clock, CheckCircle, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { useCartStore, useSettingsStore } from '@/lib/store';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation, LANGUAGES, isRTL } from '@/lib/i18n';
 import LogoIcon from './LogoIcon';
+import TranslatedText from './TranslatedText';
 
 export default function Header() {
     const cartItems = useCartStore((state) => state.items);
@@ -16,6 +17,16 @@ export default function Header() {
     const [searchQuery, setSearchQuery] = useState('');
     const [mounted, setMounted] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
+    const [showLang, setShowLang] = useState(false);
+
+    // Reflect the active language on <html>: language attribute + text direction
+    // (Arabic -> right-to-left).
+    useEffect(() => {
+        if (typeof document !== 'undefined') {
+            document.documentElement.lang = locale;
+            document.documentElement.dir = isRTL(locale) ? 'rtl' : 'ltr';
+        }
+    }, [locale]);
 
     useEffect(() => {
         setMounted(true);
@@ -27,6 +38,7 @@ export default function Header() {
             const target = event.target as HTMLElement;
             if (!target.closest('[data-dropdown-component]')) {
                 if (showCategories) setShowCategories(false);
+                if (showLang) setShowLang(false);
             }
         };
 
@@ -34,7 +46,7 @@ export default function Header() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [mounted, initializeSettings, showCategories]);
+    }, [mounted, initializeSettings, showCategories, showLang]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,7 +67,7 @@ export default function Header() {
                         </span>
                         <span className="hidden sm:flex items-center gap-1 text-gray-300">
                             <Clock className="w-3.5 h-3.5 text-[#74D644]" />
-                            Worldwide Shipping • US & Europe Express
+                            <TranslatedText text="Worldwide Shipping • US & Europe Express" />
                         </span>
                     </div>
                     <div className="flex items-center gap-4 hidden md:flex">
@@ -73,16 +85,35 @@ export default function Header() {
                             <option value="NGN" className="text-black">NGN (₦)</option>
                         </select>
 
-                        <select
-                            aria-label="Select Language"
-                            value={locale}
-                            onChange={(e) => setLocale(e.target.value)}
-                            className="bg-transparent border-none outline-none cursor-pointer hover:text-lime-300 focus-visible:ring-2 focus-visible:ring-lime-300 rounded text-white"
-                        >
-                            <option value="en" className="text-black">English</option>
-                            <option value="es" className="text-black">Español</option>
-                            <option value="fr" className="text-black">Français</option>
-                        </select>
+                        <div className="relative" data-dropdown-component="true">
+                            <button
+                                type="button"
+                                aria-label="Select Language"
+                                onClick={() => setShowLang(!showLang)}
+                                className="flex items-center gap-1.5 cursor-pointer hover:text-lime-300 transition-colors rounded px-1 py-0.5"
+                            >
+                                <Globe className="w-3.5 h-3.5 text-[#74D644]" />
+                                <span>{LANGUAGES[locale] || locale}</span>
+                                <ChevronDown className={`w-3 h-3 transition-transform ${showLang ? 'rotate-180' : ''}`} />
+                            </button>
+                            {showLang && (
+                                <div className="absolute top-full right-0 mt-1 w-44 bg-white text-gray-800 shadow-2xl rounded-xl border border-gray-100 z-[100] py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                                    {Object.entries(LANGUAGES).map(([code, label]) => (
+                                        <button
+                                            key={code}
+                                            type="button"
+                                            onClick={() => {
+                                                setLocale(code);
+                                                setShowLang(false);
+                                            }}
+                                            className={`block w-full text-left px-4 py-2 text-sm font-semibold transition-colors hover:bg-[#0E5B3D]/10 hover:text-[#0E5B3D] ${locale === code ? 'text-[#0E5B3D]' : 'text-gray-600'}`}
+                                        >
+                                            {label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
                         <span 
                             className="cursor-pointer hover:text-lime-300 transition-colors"
@@ -241,7 +272,7 @@ export default function Header() {
                             onClick={() => setShowCategories(!showCategories)}
                         >
                             <Menu className="w-4 h-4 text-[#74D644]" />
-                            <span>Browse Departments</span>
+                            <span><TranslatedText text="Browse Departments" /></span>
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showCategories ? 'rotate-180' : ''}`} />
                         </button>
                         {[
@@ -254,7 +285,7 @@ export default function Header() {
                             { name: 'Weekly Deals', slug: 'deals' }
                         ].map((item) => (
                             <Link key={item.slug} href={`/category/${item.slug}`} className="hover:text-[#74D644] transition-colors">
-                                {item.name}
+                                <TranslatedText text={item.name} />
                             </Link>
                         ))}
                     </div>
@@ -282,7 +313,7 @@ export default function Header() {
                                     className="block px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-[#0E5B3D]/10 hover:text-[#0E5B3D] transition-colors flex items-center justify-between group"
                                     onClick={() => setShowCategories(false)}
                                 >
-                                    <span>{cat.name}</span>
+                                    <span><TranslatedText text={cat.name} /></span>
                                     <ChevronDown className="w-4 h-4 -rotate-90 opacity-0 group-hover:opacity-100 transition-opacity text-[#0E5B3D]" />
                                 </Link>
                             ))}

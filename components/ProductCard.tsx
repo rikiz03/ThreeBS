@@ -6,16 +6,18 @@ import { Product } from '@/lib/types';
 import { Star, Heart, CheckCircle2, Plus, Minus } from 'lucide-react';
 import { useCartStore, useSettingsStore } from '@/lib/store';
 import { useState } from 'react';
+import { useTranslatedText } from '@/lib/translate';
 
 interface ProductCardProps {
     product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-    const { currency } = useSettingsStore();
+    const { currency, locale } = useSettingsStore();
     const addItem = useCartStore((state) => state.addItem);
     const removeItem = useCartStore((state) => state.removeItem);
     const cartItems = useCartStore((state) => state.items);
+    const translatedTitle = useTranslatedText(product.title, locale);
     
     // Check how many of this item are in cart (sum quantities, not entry count)
     const cartItemCount = cartItems
@@ -34,24 +36,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     const priceParts = formatPriceParts(product.price);
     
-    // Extract a mockup subtitle if available, or generate one based on category
-    const getSubtitle = () => {
-        const title = product.title.toLowerCase();
-        if (title.includes('beetroot') || title.includes('avocado') || title.includes('carrot') || title.includes('cabbage')) return '(Local shop)';
-        if (title.includes('szam') || title.includes('chips') || title.includes('biscuit')) return '(Process food)';
-        if (title.includes('beef') || title.includes('chicken') || title.includes('meat')) return '(Cut Bone)';
-        if (title.includes('sprite') || title.includes('drink') || title.includes('soda')) return '(Beverage)';
-        if (title.includes('plant') || title.includes('frozen') || title.includes('fish')) return '(Frozen pack)';
-        return '(Local shop)';
-    };
-
-    // Extract a mockup weight/size if available
-    const getWeight = () => {
-        const title = product.title.toLowerCase();
-        if (title.includes('beetroot') || title.includes('avocado')) return '300 gm';
-        return '500 gm';
-    };
-
     const handleAdd = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -94,17 +78,9 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {/* Title & Subtitle */}
                 <Link href={`/product/${product.id}`} className="block mb-1">
                     <h3 className="text-sm font-black text-gray-900 line-clamp-1 group-hover:text-[#0E5B3D] transition-colors leading-snug">
-                        {product.title}
+                        {translatedTitle}
                     </h3>
-                    <p className="text-xs font-bold text-gray-400 mt-0.5">
-                        {getSubtitle()}
-                    </p>
                 </Link>
-
-                {/* Weight/Size */}
-                <span className="text-[11px] font-bold text-gray-400 mb-4 block">
-                    {getWeight()}
-                </span>
 
                 {/* Bottom Row: Price & Quantity Selector Pill */}
                 <div className="mt-auto flex items-center justify-between gap-2 pt-2 border-t border-gray-50">

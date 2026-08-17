@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Instagram, Twitter, Youtube, Mail, ShieldCheck, Lock, CreditCard, MapPin, Phone } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import LogoIcon from './LogoIcon';
+import TranslatedText from './TranslatedText';
 
 export default function Footer() {
     return (
@@ -23,7 +24,7 @@ export default function Footer() {
                             </div>
                         </Link>
                         <p className="text-gray-300 text-sm leading-relaxed font-medium">
-                            Your trusted global shopping destination. We source premium products from top suppliers worldwide and deliver directly to customers in the US, Europe, and beyond.
+                            <TranslatedText text="Your trusted global shopping destination. We source premium products from top suppliers worldwide and deliver directly to customers in the US, Europe, and beyond." />
                         </p>
                         <div className="flex gap-3 pt-2">
                             {/* Instagram */}
@@ -61,13 +62,13 @@ export default function Footer() {
 
                     {/* Departments */}
                     <div>
-                        <h4 className="text-lg font-black text-white mb-6 uppercase tracking-wider">Shop By Category</h4>
+                        <h4 className="text-lg font-black text-white mb-6 uppercase tracking-wider"><TranslatedText text="Shop By Category" /></h4>
                         <ul className="space-y-4 font-medium">
                             {['Electronics & Gadgets', 'Fashion & Apparel', 'Home & Garden', 'Beauty & Health', 'Sports & Outdoors', 'Toys & Hobbies'].map((dept) => (
                                 <li key={dept}>
                                     <Link href="/category/deals" className="hover:text-[#74D644] transition-colors flex items-center gap-2 group">
                                         <span className="w-1.5 h-1.5 rounded-full bg-[#74D644] opacity-50 group-hover:opacity-100 group-hover:scale-150 transition-all"></span>
-                                        {dept}
+                                        <TranslatedText text={dept} />
                                     </Link>
                                 </li>
                             ))}
@@ -76,30 +77,30 @@ export default function Footer() {
 
                     {/* Customer Care */}
                     <div>
-                        <h4 className="text-lg font-black text-white mb-6 uppercase tracking-wider">Customer Care</h4>
+                        <h4 className="text-lg font-black text-white mb-6 uppercase tracking-wider"><TranslatedText text="Customer Care" /></h4>
                         <ul className="space-y-4 font-medium">
                             <li key="account">
                                 <Link href="/account" className="hover:text-[#74D644] transition-colors flex items-center gap-2 group">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#74D644] opacity-50 group-hover:opacity-100 group-hover:scale-150 transition-all"></span>
-                                    My Account
+                                    <TranslatedText text="My Account" />
                                 </Link>
                             </li>
                             <li key="about">
                                 <Link href="/about-us" className="hover:text-[#74D644] transition-colors flex items-center gap-2 group">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#74D644] opacity-50 group-hover:opacity-100 group-hover:scale-150 transition-all"></span>
-                                    About Three Brothers
+                                    <TranslatedText text="About Three Brothers" />
                                 </Link>
                             </li>
                             <li key="refunds">
                                 <Link href="/refund-policy" className="hover:text-[#74D644] transition-colors flex items-center gap-2 group">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#74D644] opacity-50 group-hover:opacity-100 group-hover:scale-150 transition-all"></span>
-                                    Returns & Refund Policy
+                                    <TranslatedText text="Returns & Refund Policy" />
                                 </Link>
                             </li>
                             <li key="shipping">
                                 <Link href="/shipping-info" className="hover:text-[#74D644] transition-colors flex items-center gap-2 group">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#74D644] opacity-50 group-hover:opacity-100 group-hover:scale-150 transition-all"></span>
-                                    Delivery Information
+                                    <TranslatedText text="Delivery Information" />
                                 </Link>
                             </li>
                         </ul>
@@ -107,14 +108,14 @@ export default function Footer() {
 
                     {/* Contact Info */}
                     <div>
-                        <h4 className="text-lg font-black text-white mb-6 uppercase tracking-wider">Contact Us</h4>
+                        <h4 className="text-lg font-black text-white mb-6 uppercase tracking-wider"><TranslatedText text="Contact Us" /></h4>
                         <p className="text-gray-300 text-sm mb-6 leading-relaxed font-medium">
-                            Questions about your order? Our global support team is available 24/7.
+                            <TranslatedText text="Questions about your order? Our global support team is available 24/7." />
                         </p>
                         <ul className="space-y-4 font-medium">
                             <li className="flex items-start gap-3 text-gray-300">
                                 <MapPin className="w-5 h-5 text-[#74D644] mt-0.5" />
-                                <span>Worldwide Shipping<br/>US & Europe Priority</span>
+                                <span><TranslatedText text="Worldwide Shipping" /><br /><TranslatedText text="US & Europe Priority" /></span>
                             </li>
                             <li className="flex items-center gap-3 text-gray-300">
                                 <Phone className="w-5 h-5 text-[#74D644]" />
@@ -135,27 +136,27 @@ export default function Footer() {
                             <div className="w-10 h-10 rounded-full bg-[#74D644]/20 flex items-center justify-center">
                                 <ShieldCheck className="w-5 h-5 text-[#74D644]" />
                             </div>
-                            <span className="text-sm font-bold uppercase tracking-wider">100% Secure Checkout</span>
+                            <span className="text-sm font-bold uppercase tracking-wider"><TranslatedText text="100% Secure Checkout" /></span>
                         </div>
                         <div className="hidden sm:block w-px h-8 bg-white/20"></div>
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-[#74D644]/20 flex items-center justify-center">
                                 <Lock className="w-5 h-5 text-[#74D644]" />
                             </div>
-                            <span className="text-sm font-bold uppercase tracking-wider">Data Protection</span>
+                            <span className="text-sm font-bold uppercase tracking-wider"><TranslatedText text="Data Protection" /></span>
                         </div>
                         <div className="hidden sm:block w-px h-8 bg-white/20"></div>
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-[#74D644]/20 flex items-center justify-center">
                                 <CreditCard className="w-5 h-5 text-[#74D644]" />
                             </div>
-                            <span className="text-sm font-bold uppercase tracking-wider">Safe Payments</span>
+                            <span className="text-sm font-bold uppercase tracking-wider"><TranslatedText text="Safe Payments" /></span>
                         </div>
                     </div>
                 </div>
 
                 <div className="text-center text-xs text-gray-400 font-bold tracking-widest uppercase">
-                    <p>&copy; {new Date().getFullYear()} Three Brothers Stores. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Three Brothers Stores. <TranslatedText text="All rights reserved." /></p>
                 </div>
             </div>
         </footer>

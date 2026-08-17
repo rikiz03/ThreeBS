@@ -1,4 +1,22 @@
 import { useSettingsStore } from './store';
+// ------------------------------------------------------------------
+// Supported locales + language metadata
+// ------------------------------------------------------------------
+export const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'ar', 'de'];
+
+// Native labels shown in the language dropdown.
+export const LANGUAGES: Record<string, string> = {
+    'en': 'English',
+    'es': 'Español',
+    'fr': 'Français',
+    'ar': 'العربية',
+    'de': 'Deutsch',
+};
+
+// Arabic (and any future RTL locales) use a right-to-left layout.
+export function isRTL(locale: string): boolean {
+    return locale === 'ar';
+}
 
 const translations: Record<string, Record<string, string>> = {
     'en': {
@@ -188,6 +206,57 @@ const translations: Record<string, Record<string, string>> = {
         'special_offers': 'Zeitlich begrenzte Sonderangebote',
         'luxury_collection': 'Luxusuhren & edler Schmuck',
         'smart_home_tech': 'Smart-Home-Technik der nächsten Generation'
+    },
+    'ar': {
+        'search_placeholder': 'ابحث عن المنتجات والعلامات التجارية والمزيد...',
+        'best_deals': 'أفضل العروض',
+        'customer_care': 'خدمة العملاء',
+        'deliver_to': 'التوصيل إلى',
+        'sign_in': 'تسجيل الدخول / التسجيل',
+        'all_categories': 'جميع الفئات',
+        'footer_description': 'وجهتك الأولى لمنتجات عالية الجودة بأسعار لا تُضاهى. نوصل التميز إلى باب منزلك.',
+        'quick_links': 'روابط سريعة',
+        'contact_us': 'اتصل بنا',
+        'rights_reserved': 'جميع الحقوق محفوظة.',
+        'electronics': 'الإلكترونيات',
+        'fashion': 'الأزياء',
+        'home-decor': 'ديكور المنزل',
+        'health-beauty': 'الصحة والجمال',
+        'sports': 'الرياضة',
+        'toys': 'الألعاب',
+        'deals': 'العروض',
+        'groceries': 'البقالة',
+        'automotive': 'السيارات',
+        'books': 'الكتب',
+        'jewelry': 'المجوهرات',
+        'phones': 'الهواتف والأجهزة اللوحية',
+        'computers': 'أجهزة الكمبيوتر',
+        'view_all': 'عرض الكل',
+        'off': 'خصم',
+        'free_shipping': 'شحن مجاني',
+        'today_deals': 'أفضل عروض اليوم لك!',
+        'fresh_healthy': 'طازج وصحي',
+        'vegetable': 'خضروات',
+        'up_to_30_off': 'خصم يصل إلى 30%',
+        'shop_now': 'تسوق الآن',
+        'galaxy_ai': 'ذكاء Galaxy AI هنا',
+        'sale': 'تخفيضات',
+        'bulk_order_deal': 'احصل على أفضل الأسعار للطلبات بالجملة',
+        'modern_apparel_deal': 'وصل حديثاً في الأزياء العصرية',
+        'ai_experience': 'تجربة تسوق بالذكاء الاصطناعي المميزة',
+        'ask_ai_placeholder': 'اطلب من الذكاء الاصطناعي العثور على منتجات...',
+        'ask_ai_btn': 'اسأل الذكاء الاصطناعي',
+        'electronics_deals': 'أفضل العروض في الإلكترونيات',
+        'beauty_best_sellers': 'الأكثر مبيعاً في الجمال والصحة',
+        'iphone_title': 'iPhone 15 Pro Max',
+        'from': 'ابتداءً من',
+        'iphone_desc': 'اختبر التصميم الجديد المصنوع من التيتانيوم، ومعالج A17 Pro، وأقوى نظام كاميرا في iPhone على الإطلاق.',
+        'shoes_title': 'على أحذية رياضية مختارة',
+        'shop_sale': 'تسوق التخفيضات',
+        'explore_categories': 'استكشف الفئات الشائعة',
+        'special_offers': 'عروض خاصة لفترة محدودة',
+        'luxury_collection': 'ساعات فاخرة ومجوهرات راقية',
+        'smart_home_tech': 'تقنية المنزل الذكي من الجيل الجديد'
     }
 
 };

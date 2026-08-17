@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Category } from '@/lib/types';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
+import TranslatedText from './TranslatedText';
 
 interface CategoryListProps {
     categories: Category[];
@@ -59,11 +60,11 @@ export default function CategoryList({ categories }: CategoryListProps) {
         <div className="relative mb-12 py-4 group/section" id="popular_categories_section">
             <div className="flex items-center justify-between mb-6 px-2">
                 <div>
-                    <h2 className="text-2xl font-black text-[#0E5B3D] tracking-tight">Explore Categories</h2>
-                    <p className="text-xs text-gray-500 font-bold mt-0.5">Curated collections for every style</p>
+                    <h2 className="text-2xl font-black text-[#0E5B3D] tracking-tight"><TranslatedText text="Explore Categories" /></h2>
+                    <p className="text-xs text-gray-500 font-bold mt-0.5"><TranslatedText text="Curated collections for every style" /></p>
                 </div>
                 <Link href="/category/deals" className="hidden sm:flex bg-[#74D644] text-[#0E5B3D] px-6 py-2.5 rounded-full text-xs font-black items-center hover:bg-lime-300 transition-all shadow-md group uppercase tracking-wider">
-                    See all <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    <TranslatedText text="See all" /> <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
 
@@ -116,10 +117,10 @@ export default function CategoryList({ categories }: CategoryListProps) {
                         </div>
                         <div className="flex flex-col overflow-hidden">
                             <span className="text-sm font-black text-gray-900 group-hover:text-[#0E5B3D] transition-colors truncate">
-                                {category.name}
+                                <TranslatedText text={category.name} />
                             </span>
                             <span className="text-[11px] font-bold text-gray-400 truncate mt-0.5">
-                                {category.subtitle || "New arrivals"}
+                                <TranslatedText text={category.subtitle || "New arrivals"} />
                             </span>
                         </div>
                     </Link>
@@ -131,7 +132,7 @@ export default function CategoryList({ categories }: CategoryListProps) {
                     className="flex items-center justify-center bg-[#74D644] text-[#0E5B3D] p-6 rounded-2xl shadow-sm hover:shadow-md min-w-[120px] h-[88px] group transition-all duration-300 hover:-translate-y-1 hover:bg-lime-300 font-black text-sm flex-shrink-0"
                 >
                     <div className="flex flex-col items-center gap-1">
-                        <span>See all</span>
+                        <TranslatedText text="See all" />
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </div>
                 </Link>
