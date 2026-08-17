@@ -234,9 +234,7 @@ export default function Header() {
             {showCategories && (
                 <div data-dropdown-component="true" className="md:hidden absolute top-full left-0 right-0 bg-[#0E5B3D] border-t border-white/10 shadow-2xl z-[100] animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="container mx-auto px-4 py-4 space-y-3">
-                        <Link href="/" className="block text-sm font-bold text-white hover:text-[#74D644]" onClick={() => setShowCategories(false)}>Home</Link>
-
-                        <div className="border-t border-white/10 pt-4 space-y-4">
+                        <div className="space-y-4">
                             <p className="text-xs font-bold uppercase tracking-wider text-lime-300">Store settings</p>
                             <div className="grid grid-cols-2 gap-3">
                                 <label className="flex flex-col gap-1.5 text-xs font-semibold text-gray-200">
@@ -286,6 +284,8 @@ export default function Header() {
                                 </div>
                             </SignedIn>
                         </div>
+
+                        <Link href="/" className="block border-t border-white/10 pt-4 text-sm font-bold text-white hover:text-[#74D644]" onClick={() => setShowCategories(false)}>Home</Link>
 
                         {[
                             { name: 'Electronics', slug: 'electronics' },
