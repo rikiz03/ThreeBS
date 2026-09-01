@@ -205,3 +205,40 @@ export const useSalesStore = create<SalesState>()(
         }
     )
 );
+
+interface ClickEntry {
+    count: number;
+    product: CartItem;
+}
+
+interface ClicksState {
+    clicks: Record<string, ClickEntry>;
+    recordClick: (product: any) => void;
+    clearClicks: () => void;
+}
+
+/**
+ * Tracks how often each product is clicked/frequented so the "Trending Products"
+ * section can appear once a real Top 10 of frequently-clicked products emerge.
+ */
+export const useClicksStore = create<ClicksState>()(
+    persist(
+        (set, get) => ({
+            clicks: {},
+            recordClick: (product) => {
+                if (!product || !product.id) return;
+                const clicks = { ...get().clicks };
+                const existing = clicks[product.id];
+                clicks[product.id] = {
+                    count: (existing?.count || 0) + 1,
+                    product,
+                };
+                set({ clicks });
+            },
+            clearClicks: () => set({ clicks: {} }),
+        }),
+        {
+            name: 'clicks-storage',
+        }
+    )
+);

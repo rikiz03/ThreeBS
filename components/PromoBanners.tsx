@@ -6,8 +6,16 @@ import { useState } from 'react';
 import { Plus, Minus, ChevronRight, Star, ArrowRight } from 'lucide-react';
 import { useCartStore, useSettingsStore, useSalesStore } from '@/lib/store';
 import { getCurrencyInfo } from '@/lib/geo';
+import { Product } from '@/lib/types';
+import ProductCard from '@/components/ProductCard';
 
-export default function PromoBanners() {
+interface PromoBannersProps {
+    lightingProducts?: Product[];
+    officeProducts?: Product[];
+    gamingProducts?: Product[];
+}
+
+export default function PromoBanners({ lightingProducts = [], officeProducts = [], gamingProducts = [] }: PromoBannersProps) {
     const [activeTab, setActiveTab] = useState('Trending');
     const addItem = useCartStore((state) => state.addItem);
     const removeItem = useCartStore((state) => state.removeItem);
@@ -218,48 +226,76 @@ export default function PromoBanners() {
             </div>
             )}
 
-            {/* 3. Full-Width Bottom App Download Banner (From Mockup) */}
-            <div className="bg-[#581443] rounded-[36px] p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12 border border-white/10">
-                {/* Background Glow */}
-                <div className="absolute top-0 left-1/3 w-96 h-96 bg-pink-500/10 rounded-full blur-[100px] pointer-events-none animate-pulse" />
-
-                <div className="z-10 max-w-xl space-y-6 text-center lg:text-left">
-                    <h2 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-white">
-                        Shop Anytime, Get <br />
-                        Premium Products From <br />
-                        <span className="text-[#74D644]">Around the World!</span>
-                    </h2>
-                    <p className="text-gray-200 text-base sm:text-lg font-medium leading-relaxed max-w-md mx-auto lg:mx-0">
-                        Download our app for exclusive deals, order tracking, and a seamless shopping experience. Shipping to US, Europe & worldwide.
-                    </p>
-
-                    <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
-<Link href="/#products-section" className="bg-black/40 hover:bg-black/60 border border-white/20 px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 shadow-lg group">
-                            <Image src="https://placehold.co/30x30/png?text=GP" alt="Google Play" width={28} height={28} className="rounded-md" />
-                            <div className="text-left">
-                                <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold leading-none">Get it on</p>
-                                <p className="text-sm font-black text-white leading-tight mt-0.5">Google Play</p>
-                            </div>
-                        </Link>
-<Link href="/#products-section" className="bg-black/40 hover:bg-black/60 border border-white/20 px-6 py-3 rounded-2xl flex items-center gap-3 transition-all duration-300 shadow-lg group">
-                            <Image src="https://placehold.co/30x30/png?text=AS" alt="App Store" width={28} height={28} className="rounded-md" />
-                            <div className="text-left">
-                                <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold leading-none">Download on the</p>
-                                <p className="text-sm font-black text-white leading-tight mt-0.5">App Store</p>
-                            </div>
-                        </Link>
+            {/* 3a. Lighting & Electrical Section */}
+            <div className="mb-16">
+                <div className="flex items-center justify-between mb-8 px-2">
+                    <div>
+                        <h2 className="text-2xl font-black text-[#0E5B3D] tracking-tight">Lighting &amp; Electrical</h2>
+                        <p className="text-xs text-gray-500 font-bold mt-0.5">Brighter spaces &amp; essential power</p>
                     </div>
+                    <Link href="/category/lighting-electrical" className="text-xs font-black text-[#0E5B3D] hover:text-[#74D644] transition-colors flex items-center gap-1 uppercase tracking-wider">
+                        See more <ChevronRight className="w-4 h-4" />
+                    </Link>
                 </div>
+                {lightingProducts.length > 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                        {lightingProducts.slice(0, 10).map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="bg-white rounded-2xl p-8 text-center text-gray-400 text-sm border border-gray-100">
+                        Lighting &amp; electrical items are on their way. Check back soon!
+                    </div>
+                )}
+            </div>
 
-                {/* Delivery Person Illustration */}
-                <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 z-10 flex-shrink-0">
-                    <Image
-                        src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=600&auto=format&fit=crop"
-                        alt="Happy customer with shopping bags"
-                        fill
-                        className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.6)]"
-                    />
+            {/* 3b. Office & Business Items Section */}
+            <div className="mb-16">
+                <div className="flex items-center justify-between mb-8 px-2">
+                    <div>
+                        <h2 className="text-2xl font-black text-[#0E5B3D] tracking-tight">Office &amp; Business Items</h2>
+                        <p className="text-xs text-gray-500 font-bold mt-0.5">Everything your workspace needs</p>
+                    </div>
+                    <Link href="/category/office-business" className="text-xs font-black text-[#0E5B3D] hover:text-[#74D644] transition-colors flex items-center gap-1 uppercase tracking-wider">
+                        See more <ChevronRight className="w-4 h-4" />
+                    </Link>
                 </div>
+                {officeProducts.length > 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                        {officeProducts.slice(0, 10).map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="bg-white rounded-2xl p-8 text-center text-gray-400 text-sm border border-gray-100">
+                        Office &amp; business items are on their way. Check back soon!
+                    </div>
+                )}
+            </div>
+
+            {/* 3c. Gaming & Fun Items Section */}
+            <div className="mb-16">
+                <div className="flex items-center justify-between mb-8 px-2">
+                    <div>
+                        <h2 className="text-2xl font-black text-[#0E5B3D] tracking-tight">Gaming &amp; Fun Items</h2>
+                        <p className="text-xs text-gray-500 font-bold mt-0.5">Level up playtime &amp; entertainment</p>
+                    </div>
+                    <Link href="/category/gaming-fun" className="text-xs font-black text-[#0E5B3D] hover:text-[#74D644] transition-colors flex items-center gap-1 uppercase tracking-wider">
+                        See more <ChevronRight className="w-4 h-4" />
+                    </Link>
+                </div>
+                {gamingProducts.length > 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                        {gamingProducts.slice(0, 10).map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="bg-white rounded-2xl p-8 text-center text-gray-400 text-sm border border-gray-100">
+                        Gaming &amp; fun items are on their way. Check back soon!
+                    </div>
+                )}
             </div>
         </div>
     );

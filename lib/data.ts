@@ -142,6 +142,9 @@ export const FEATURED_CATEGORIES: Category[] = [
     { id: 'cat-outdoor', name: 'Outdoor Gear', slug: 'outdoor-adventure', image: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=400&h=400&fit=crop' },
     { id: 'cat-home', name: 'Home & Lifestyle', slug: 'home-lifestyle', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=400&h=400&fit=crop' },
     { id: 'cat-wellness', name: 'Wellness', slug: 'health-wellness', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=400&h=400&fit=crop' },
+    { id: 'cat-light', name: 'Lighting & Electrical', slug: 'lighting-electrical', image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=400&h=400&fit=crop' },
+    { id: 'cat-office', name: 'Office & Business Items', slug: 'office-business', image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=400&h=400&fit=crop' },
+    { id: 'cat-gaming', name: 'Gaming & Fun Items', slug: 'gaming-fun', image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=400&h=400&fit=crop' },
 ];
 
 
@@ -152,7 +155,10 @@ export const CATEGORY_TITLE_MAP: Record<string, string> = {
     'creator-studio': 'Professional Creator Studio',
     'outdoor-adventure': 'Outdoor & Adventure Gear',
     'home-lifestyle': 'Premium Home & Lifestyle',
-    'health-wellness': 'Health, Beauty & Personal Wellness'
+    'health-wellness': 'Health, Beauty & Personal Wellness',
+    'lighting-electrical': 'Lighting & Electrical Essentials',
+    'office-business': 'Office & Business Items',
+    'gaming-fun': 'Gaming & Fun Items'
 };
 
 
@@ -164,6 +170,9 @@ export const SEMANTIC_CRITERIA: Record<string, string[]> = {
     'cat-outdoor': ['outdoor', 'adventure', 'camping', 'backpack', 'bbq', 'grill', 'stove', 'flashlight', 'fishing', 'cycling', 'tactical', 'survival', 'hiking', 'cooler', 'lantern'],
     'cat-home': ['home', 'living', 'lifestyle', 'ashtray', 'walnut', 'air fryer', 'atmosphere', 'lamp', 'speaker', 'clock', 'shelf', 'organizer', 'humidifier', 'kitchen', 'decor', 'furniture', 'rug'],
     'cat-wellness': ['health', 'beauty', 'care', 'massage', 'wellness', 'skincare', 'face mask', 'neck cover', 'medical', 'therapy', 'spa', 'cosmetic'],
+    'cat-light': ['lighting', 'light', 'bulb', 'lamp', 'led', 'lantern', 'flashlight', 'torch', 'socket', 'switch', 'extension', 'electrical', 'power strip', 'chandelier', 'ceiling light', 'string light', 'cable', 'wire', 'stroboscopic'],
+    'cat-office': ['office', 'desk', 'stationery', 'stationery', 'paper', 'printer', 'pen', 'notebook', 'organizer', 'folder', 'whiteboard', 'business', 'diary', 'highlighter', 'stapler', 'scissors', 'tape', 'bulletin'],
+    'cat-gaming': ['gaming', 'game', 'controller', 'joystick', 'headset', 'esports', 'playstation', 'xbox', 'nintendo', 'switch', 'steering wheel', 'console', 'mouse', 'keyboard', 'rgb', 'fun', 'arcade', 'toy', 'lego', 'puzzle', 'board game'],
 };
 
 

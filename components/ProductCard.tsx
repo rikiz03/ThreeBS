@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/lib/types';
 import { Star, Heart, CheckCircle2, Plus, Minus } from 'lucide-react';
-import { useCartStore, useSettingsStore } from '@/lib/store';
+import { useCartStore, useSettingsStore, useClicksStore } from '@/lib/store';
 import { getCurrencyInfo } from '@/lib/geo';
 import { useState } from 'react';
 import { useTranslatedText } from '@/lib/translate';
@@ -18,6 +18,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     const addItem = useCartStore((state) => state.addItem);
     const removeItem = useCartStore((state) => state.removeItem);
     const cartItems = useCartStore((state) => state.items);
+    const recordClick = useClicksStore((state) => state.recordClick);
     const translatedTitle = useTranslatedText(product.title, locale);
     
     // Check how many of this item are in cart (sum quantities, not entry count)
@@ -54,6 +55,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         }
     };
 
+    const handleProductClick = () => {
+        // Track that this product was clicked/frequented (drives the "Trending Products" section).
+        recordClick(product);
+    };
+
     return (
         <div 
             className="bg-white rounded-3xl p-4 transition-all duration-300 hover:shadow-xl border border-gray-100 flex flex-col h-full relative group overflow-hidden"
@@ -66,7 +72,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </button>
 
             {/* Product Image */}
-            <Link href={`/product/${product.id}`} className="relative aspect-square mb-4 rounded-2xl overflow-hidden bg-[#F8FAFC] flex justify-center items-center group-hover:bg-[#74D644]/5 transition-colors p-4">
+            <Link href={`/product/${product.id}`} onClick={handleProductClick} className="relative aspect-square mb-4 rounded-2xl overflow-hidden bg-[#F8FAFC] flex justify-center items-center group-hover:bg-[#74D644]/5 transition-colors p-4">
                 <Image
                     src={product.image}
                     alt={product.title}
@@ -80,7 +86,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {/* Product Details */}
             <div className="flex flex-col flex-1 px-1">
                 {/* Title & Subtitle */}
-                <Link href={`/product/${product.id}`} className="block mb-1">
+                <Link href={`/product/${product.id}`} onClick={handleProductClick} className="block mb-1">
                     <h3 className="text-sm font-black text-gray-900 line-clamp-1 group-hover:text-[#0E5B3D] transition-colors leading-snug">
                         {translatedTitle}
                     </h3>
