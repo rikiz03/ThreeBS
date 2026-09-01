@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
 
         // PayPal routes through Stripe's native PayPal so the button is honest.
         const wantsPayPal = paymentMethod === 'paypal';
-        const paymentMethodTypes: string[] = wantsPayPal ? ['card', 'paypal'] : ['card'];
+        const paymentMethodTypes: Array<'card' | 'paypal'> = wantsPayPal ? ['card', 'paypal'] : ['card'];
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: paymentMethodTypes,
