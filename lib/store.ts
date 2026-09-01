@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Product } from './types';
+import { Product, Review } from './types';
 
 export interface CartItem extends Product {
     quantity: number;
@@ -239,6 +239,37 @@ export const useClicksStore = create<ClicksState>()(
         }),
         {
             name: 'clicks-storage',
+        }
+    )
+);
+
+interface ReviewsState {
+    reviews: Record<string, Review[]>;
+    addReview: (productId: string, review: Review) => void;
+    clearReviews: () => void;
+}
+
+/**
+ * Stores buyer-submitted reviews per product (persisted in the browser).
+ * Keyed by product id so each product page shows the reviews buyers leave on it.
+ */
+export const useReviewsStore = create<ReviewsState>()(
+    persist(
+        (set, get) => ({
+            reviews: {},
+            addReview: (productId, review) => {
+                if (!productId || !review) return;
+                set({
+                    reviews: {
+                        ...get().reviews,
+                        [productId]: [...(get().reviews[productId] || []), review],
+                    },
+                });
+            },
+            clearReviews: () => set({ reviews: {} }),
+        }),
+        {
+            name: 'reviews-storage',
         }
     )
 );

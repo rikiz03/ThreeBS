@@ -380,15 +380,19 @@ export async function getProduct(id: string): Promise<Product | null> {
         try {
             const reviewsData = await wooFetch(`products/reviews`, { product: id });
             if (Array.isArray(reviewsData)) {
-                realReviews = reviewsData.map((r: any) => ({
-                    id: r.id.toString(),
-                    author: r.reviewer,
-                    rating: r.rating,
-                    date: new Date(r.date_created).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-                    comment: r.review.replace(/<[^>]*>?/gm, ''), // strip html
-                    verified: r.verified,
-                    images: []
-                }));
+                // Only carry imported reviews rated more than one star (2★ and up),
+                // so only genuinely positive reviews from the source are surfaced here.
+                realReviews = reviewsData
+                    .filter((r: any) => Number(r.rating) > 1)
+                    .map((r: any) => ({
+                        id: r.id.toString(),
+                        author: r.reviewer,
+                        rating: r.rating,
+                        date: new Date(r.date_created).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                        comment: r.review.replace(/<[^>]*>?/gm, ''), // strip html
+                        verified: r.verified,
+                        images: []
+                    }));
             }
         } catch (rError) {
             console.error(`Error fetching reviews for product ${id}:`, rError);

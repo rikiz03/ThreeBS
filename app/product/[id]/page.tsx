@@ -80,6 +80,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         { label: product.title, href: `/product/${product.id}` }
     ];
 
+    const t = (key: string) => getTranslation(key, 'en');
+
+    // Only treat a product as having reviews when we actually have review data for it.
+    const hasReviews = (product.buyerReviews && product.buyerReviews.length > 0) || false;
+
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Product',
@@ -101,14 +106,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 name: 'Premium Value Market',
             },
         },
-        aggregateRating: product.reviews > 0 ? {
+        aggregateRating: hasReviews ? {
             '@type': 'AggregateRating',
             ratingValue: product.rating,
-            reviewCount: product.reviews,
+            reviewCount: product.buyerReviews?.length || product.reviews,
         } : undefined,
     };
-
-    const t = (key: string) => getTranslation(key, 'en');
 
     const discount = product.originalPrice
         ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -137,7 +140,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                         <TranslatedText text={product.title} />
                     </h1>
 
-                    {/* Rating + orders row */}
+                    {/* Rating + orders row (hidden entirely when there are no reviews) */}
+                    {hasReviews && (
                     <div className="flex flex-wrap items-center gap-3 mb-4">
                         <div className="flex items-center gap-1">
                             <div className="flex text-yellow-400">
@@ -148,12 +152,13 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             <span className="text-sm font-bold text-[#0E5B3D] dark:text-[#74D644] ml-1">{product.rating.toFixed(1)}</span>
                         </div>
                         <span className="w-px h-4 bg-gray-200 dark:bg-gray-700"></span>
-                        <span className="text-sm text-gray-500 cursor-pointer hover:underline">{product.reviews} <TranslatedText text="ratings" /></span>
+                        <span className="text-sm text-gray-500 cursor-pointer hover:underline">{product.buyerReviews?.length || product.reviews} <TranslatedText text="ratings" /></span>
                         <span className="w-px h-4 bg-gray-200 dark:bg-gray-700"></span>
                         <span className="text-sm text-gray-500">
                             <span className="font-bold text-gray-700 dark:text-gray-300">{Math.max(product.reviews, 1) * 3}</span> <TranslatedText text="sold" />
                         </span>
                     </div>
+                    )}
 
                     {/* Price block */}
                     <div className="bg-[#0E5B3D]/5 dark:bg-[#0E5B3D]/10 rounded-2xl p-4 mb-5">
@@ -206,14 +211,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 <div className="text-sm text-gray-700 dark:text-gray-300 space-y-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: formatDescription(product.description || "") }} />
             </div>
 
-            {/* Buyer Reviews Section */}
-            <div className="mt-12 border-t border-gray-100 dark:border-gray-800 pt-10">
-                <BuyerReviews 
-                    reviews={product.buyerReviews || []} 
-                    averageRating={product.rating} 
-                    totalReviews={product.reviews} 
-                />
-            </div>
+            {/* Buyer Reviews Section (hidden entirely when product has no reviews) */}
+            <BuyerReviews
+                productId={product.id}
+                reviews={product.buyerReviews || []}
+            />
 
             {/* Similar Items Section (AliExpress recommendation rail) */}
             <div className="mt-14 border-t border-gray-100 dark:border-gray-800 pt-10">
