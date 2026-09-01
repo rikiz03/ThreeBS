@@ -150,7 +150,7 @@ export default async function Home() {
           products={outdoorProducts}
         />
 
-        {/* 10. Promotional Banners, Weekly Best Selling, & App Download Banner */}
+        {/* 10. Promotional Banners, Best Selling Items, & App Download Banner */}
         <PromoBanners />
       </div>
     </div>

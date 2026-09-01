@@ -30,19 +30,40 @@ export async function POST(req: NextRequest) {
         switch (event.type) {
             case 'checkout.session.completed': {
                 const session = event.data.object;
-                const { orderId, fullName, city } = session.metadata || {};
+                const metadata = session.metadata || {};
+                const orderId = metadata.orderId;
+                const fullName = metadata.fullName || 'Guest';
+                const city = metadata.city || 'Unknown';
                 const amountTotal = (session.amount_total || 0) / 100; // Convert cents to dollars
 
                 console.log(`Payment succeeded for order: ${orderId}`);
+
+                // Reconstruct the purchased items from per-item metadata so the
+                // store-owner email includes line items instead of an empty list.
+                const itemCount = Math.min(parseInt(metadata.itemCount || '0', 10) || 0, 40);
+                const emailItems: Array<{ title: string; quantity: number }> = [];
+                for (let i = 1; i <= itemCount; i++) {
+                    const raw = metadata[`items_${i}`];
+                    if (!raw) continue;
+                    try {
+                        const parsed = JSON.parse(raw);
+                        emailItems.push({
+                            title: parsed.title || `Item ${i}`,
+                            quantity: parsed.quantity || 1,
+                        });
+                    } catch (parseError) {
+                        console.error('Stripe webhook: could not parse item metadata', parseError);
+                    }
+                }
 
                 // Send email notification to store owner
                 sendEmailNotification({
                     orderId: orderId || session.id,
                     total: amountTotal,
-                    fullName: fullName || 'Guest',
-                    city: city || 'Unknown',
+                    fullName,
+                    city,
                     countryCode: 'US',
-                    items: []
+                    items: emailItems
                 }).catch((err: unknown) => console.error('Email notification failed:', err));
 
                 break;

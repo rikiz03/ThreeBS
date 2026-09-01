@@ -30,11 +30,14 @@ export default function PayPalButton({ orderId, amount, email, fullName, city }:
                     email,
                     fullName,
                     city,
-                    gateway: 'paypal',
+                    paymentMethod: 'paypal',
                     items: items.map(item => ({
+                        id: item.id,
                         title: item.title,
                         quantity: item.quantity,
-                        price: item.price
+                        price: item.price,
+                        supplier: item.supplier || 'UNKNOWN',
+                        externalId: item.externalId || ''
                     }))
                 })
             });
@@ -91,7 +94,7 @@ export default function PayPalButton({ orderId, amount, email, fullName, city }:
             </button>
 
             <p className="text-[10px] text-center text-gray-400">
-                Secure payment via PayPal. You can pay with your PayPal balance or credit/debit card.
+                You'll be redirected to secure Stripe-hosted checkout where PayPal is enabled. PayPal must be activated on your Stripe account.
             </p>
         </div>
     );

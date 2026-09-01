@@ -30,10 +30,14 @@ export default function StripeCheckout({ orderId, amount, email, fullName, city 
                     email,
                     fullName,
                     city,
+                    paymentMethod: 'stripe',
                     items: items.map(item => ({
+                        id: item.id,
                         title: item.title,
                         quantity: item.quantity,
-                        price: item.price
+                        price: item.price,
+                        supplier: item.supplier || 'UNKNOWN',
+                        externalId: item.externalId || ''
                     }))
                 })
             });
@@ -90,7 +94,7 @@ export default function StripeCheckout({ orderId, amount, email, fullName, city 
             </button>
 
             <p className="text-[10px] text-center text-gray-400">
-                Secure payment via Stripe. Apple Pay & Google Pay available at checkout.
+                Secure payment via Stripe Checkout. Card, Apple Pay &amp; Google Pay are supported when enabled on your Stripe account.
             </p>
         </div>
     );

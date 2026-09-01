@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Product } from '@/lib/types';
 import { Star, Heart, CheckCircle2, Plus, Minus } from 'lucide-react';
 import { useCartStore, useSettingsStore } from '@/lib/store';
+import { getCurrencyInfo } from '@/lib/geo';
 import { useState } from 'react';
 import { useTranslatedText } from '@/lib/translate';
 
@@ -25,9 +26,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         .reduce((sum, item) => sum + item.quantity, 0);
     const [isHovered, setIsHovered] = useState(false);
 
-    // Format price with superscript cents as shown in mockup (e.g. 17.29$)
+    // Currency symbol & rate for accurate, localized pricing
+    const { symbol, rate } = getCurrencyInfo(currency);
+
+    // Format price with superscript cents as shown in mockup (e.g. $17.29)
     const formatPriceParts = (price: number) => {
-        const parts = price.toFixed(2).split('.');
+        const parts = (price * rate).toFixed(2).split('.');
         return {
             dollars: parts[0],
             cents: parts[1]
@@ -84,10 +88,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 {/* Bottom Row: Price & Quantity Selector Pill */}
                 <div className="mt-auto flex items-center justify-between gap-2 pt-2 border-t border-gray-50">
-                    {/* Mockup Price Formatting (e.g. 17.29$) */}
+                    {/* Currency sign in front, e.g. $17.29 */}
                     <div className="flex items-start text-gray-900 font-black">
+                        <span className="text-xs leading-none pt-0.5 mr-0.5">{symbol}</span>
                         <span className="text-xl leading-none">{priceParts.dollars}</span>
-                        <span className="text-xs leading-none pt-0.5">.{priceParts.cents}$</span>
+                        <span className="text-xs leading-none pt-0.5">.{priceParts.cents}</span>
                     </div>
 
                     {/* Dynamic Add to Cart / Quantity Selector Pill (From Mockup) */}

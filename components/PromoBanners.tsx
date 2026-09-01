@@ -4,26 +4,31 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Plus, Minus, ChevronRight, Star, ArrowRight } from 'lucide-react';
-import { useCartStore } from '@/lib/store';
+import { useCartStore, useSettingsStore, useSalesStore } from '@/lib/store';
+import { getCurrencyInfo } from '@/lib/geo';
 
 export default function PromoBanners() {
     const [activeTab, setActiveTab] = useState('Trending');
     const addItem = useCartStore((state) => state.addItem);
     const removeItem = useCartStore((state) => state.removeItem);
     const cartItems = useCartStore((state) => state.items);
+    const { currency } = useSettingsStore();
+    const sales = useSalesStore((state) => state.sales);
 
     const tabs = ['Trending', 'Electronics', 'Fashion', 'Home & Living', 'Beauty', 'Sports', 'Gadgets', 'Accessories'];
 
-    const bestSellingProducts = [
-        { id: 'best-1', title: 'Wireless Bluetooth Earbuds', price: 24.99, image: 'https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=200&auto=format&fit=crop', category: 'Electronics' },
-        { id: 'best-2', title: 'Smart Fitness Watch', price: 39.99, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=200&auto=format&fit=crop', category: 'Electronics' },
-        { id: 'best-3', title: 'Minimalist Backpack', price: 29.99, image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=200&auto=format&fit=crop', category: 'Fashion' },
-        { id: 'best-4', title: 'LED Desk Lamp', price: 18.99, image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop', category: 'Home & Living' },
-        { id: 'best-5', title: 'Phone Case Premium', price: 12.99, image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?q=80&w=200&auto=format&fit=crop', category: 'Accessories' },
-    ];
+    // Best selling products are derived from actual recorded sales only.
+    // The section stays hidden until at least one real purchase has been made.
+    const topBestSellers = Object.entries(sales)
+        .map(([id, entry]) => ({ id, qty: entry.qty, product: entry.product }))
+        .sort((a, b) => b.qty - a.qty)
+        .slice(0, 20);
 
+    const hasSales = topBestSellers.length > 0;
+
+    const { symbol, rate } = getCurrencyInfo(currency);
     const formatPriceParts = (price: number) => {
-        const parts = price.toFixed(2).split('.');
+        const parts = (price * rate).toFixed(2).split('.');
         return { dollars: parts[0], cents: parts[1] };
     };
 
@@ -118,10 +123,11 @@ export default function PromoBanners() {
 
             </div>
 
-            {/* 2. Weekly Best Selling Items Section (From Mockup) */}
+            {/* 2. Best Selling Items Section (hidden until real sales exist) */}
+            {hasSales && (
             <div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                    <h2 className="text-2xl font-black text-[#0E5B3D] tracking-tight">Weekly best selling items</h2>
+                    <h2 className="text-2xl font-black text-[#0E5B3D] tracking-tight">Best selling items</h2>
                     <Link href="/category/deals" className="text-xs font-black text-[#0E5B3D] hover:text-[#74D644] transition-colors flex items-center gap-1 uppercase tracking-wider self-start sm:self-auto">
                         See more <ChevronRight className="w-4 h-4" />
                     </Link>
@@ -146,7 +152,7 @@ export default function PromoBanners() {
 
                 {/* Mini Product Cards Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                    {bestSellingProducts.map((p) => {
+                    {topBestSellers.map(({ product: p }) => {
                         const count = cartItems.filter(item => item.id === p.id).length;
                         const priceParts = formatPriceParts(p.price);
 
@@ -172,8 +178,9 @@ export default function PromoBanners() {
 
                                     <div className="mt-auto flex items-center justify-between gap-2 pt-2 border-t border-gray-50">
                                         <div className="flex items-start text-gray-900 font-black">
+                                            <span className="text-[10px] leading-none pt-0.5 mr-0.5">{symbol}</span>
                                             <span className="text-lg leading-none">{priceParts.dollars}</span>
-                                            <span className="text-[10px] leading-none pt-0.5">.{priceParts.cents}$</span>
+                                            <span className="text-[10px] leading-none pt-0.5">.{priceParts.cents}</span>
                                         </div>
 
                                         <div>
@@ -209,6 +216,7 @@ export default function PromoBanners() {
                     })}
                 </div>
             </div>
+            )}
 
             {/* 3. Full-Width Bottom App Download Banner (From Mockup) */}
             <div className="bg-[#581443] rounded-[36px] p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12 border border-white/10">

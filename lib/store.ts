@@ -166,3 +166,42 @@ export const useSettingsStore = create<SettingsState>()(
         }
     )
 );
+
+interface SalesEntry {
+    qty: number;
+    product: CartItem;
+}
+
+interface SalesState {
+    sales: Record<string, SalesEntry>;
+    recordPurchase: (items: CartItem[]) => void;
+    clearSales: () => void;
+}
+
+/**
+ * Tracks total units sold per product so the "Best selling items" section
+ * only appears once real purchases have been made on the platform.
+ */
+export const useSalesStore = create<SalesState>()(
+    persist(
+        (set, get) => ({
+            sales: {},
+            recordPurchase: (items) => {
+                if (!items || items.length === 0) return;
+                const sales = { ...get().sales };
+                items.forEach(item => {
+                    const existing = sales[item.id];
+                    sales[item.id] = {
+                        qty: (existing?.qty || 0) + item.quantity,
+                        product: item,
+                    };
+                });
+                set({ sales });
+            },
+            clearSales: () => set({ sales: {} }),
+        }),
+        {
+            name: 'sales-storage',
+        }
+    )
+);

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { CheckCircle, Package, ArrowRight, Loader2 } from 'lucide-react';
-import { useCartStore, useSettingsStore } from '@/lib/store';
+import { useCartStore, useSettingsStore, useSalesStore } from '@/lib/store';
 import { trackEvent } from '@/lib/analytics';
 import { Suspense, useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -13,6 +13,7 @@ function CheckoutSuccessContent() {
     
     const { items, total, checkoutDetails, clearCart } = useCartStore();
     const { countryCode } = useSettingsStore();
+    const recordPurchase = useSalesStore((state) => state.recordPurchase);
     const [isSyncing, setIsSyncing] = useState(true);
     const hasSynced = useRef(false);
 
@@ -61,6 +62,13 @@ function CheckoutSuccessContent() {
                 });
             } catch (e) {
                 console.error('Analytics tracking failed:', e);
+            }
+
+            // Record the sale so the "Best selling items" section reflects real purchases
+            try {
+                recordPurchase(items);
+            } catch (e) {
+                console.error('Failed to record purchase:', e);
             }
 
             // Clear the cart
