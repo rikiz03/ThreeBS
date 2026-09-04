@@ -24,6 +24,8 @@ export default function BuyerReviews({ productId, reviews }: BuyerReviewsProps) 
     const [author, setAuthor] = useState('');
     const [comment, setComment] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Show absolutely nothing if the product has no reviews yet.
     if (allReviews.length === 0) {
@@ -39,18 +41,50 @@ export default function BuyerReviews({ productId, reviews }: BuyerReviewsProps) 
         return { star, count, pct };
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (rating < 1 || !comment.trim()) return;
 
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        const name = author.trim() || 'Verified Buyer';
+        const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
         const newReview: Review = {
             id: `local-${Date.now()}`,
-            author: author.trim() || 'Verified Buyer',
+            author: name,
             rating,
-            date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+            date,
             comment: comment.trim(),
             verified: true,
         };
+
+        // Persist to the shared store via the server endpoint so all visitors
+        // eventually see the same reviews (also ingested by Areviews).
+        try {
+            const res = await fetch('/api/product-reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    productId,
+                    rating,
+                    author: name,
+                    comment: newReview.comment,
+                }),
+            });
+
+            if (!res.ok) {
+                const data = await res.json().catch(() => null);
+                throw new Error(data?.error || 'Failed to save review');
+            }
+        } catch (err) {
+            console.error('Review save failed:', err);
+            // Offline / not-configured fallback: keep the review on this device.
+            addReview(productId, newReview);
+            setSubmitError('Could not reach the server — your review was saved on this device only.');
+        }
+
+        // Show the review immediately for a smooth UX.
         addReview(productId, newReview);
 
         setRating(0);
@@ -58,6 +92,7 @@ export default function BuyerReviews({ productId, reviews }: BuyerReviewsProps) 
         setAuthor('');
         setComment('');
         setSubmitted(true);
+        setIsSubmitting(false);
         setTimeout(() => setSubmitted(false), 4000);
     };
 
@@ -171,6 +206,12 @@ export default function BuyerReviews({ productId, reviews }: BuyerReviewsProps) 
                     </div>
                 )}
 
+                {submitError && (
+                    <div className="mb-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-sm font-medium">
+                        {submitError}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Star rating selector */}
                     <div>
@@ -220,10 +261,10 @@ export default function BuyerReviews({ productId, reviews }: BuyerReviewsProps) 
 
                     <button
                         type="submit"
-                        disabled={rating < 1 || !comment.trim()}
+                        disabled={isSubmitting || rating < 1 || !comment.trim()}
                         className="inline-flex items-center gap-2 bg-[#0E5B3D] hover:bg-[#0a4a33] text-white font-black px-6 py-3 rounded-full text-sm transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                        <Send className="w-4 h-4" /> Submit Review
+                        <Send className="w-4 h-4" /> {isSubmitting ? 'Submitting...' : 'Submit Review'}
                     </button>
                 </form>
             </div>
