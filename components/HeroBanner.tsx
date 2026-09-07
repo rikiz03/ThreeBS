@@ -69,8 +69,8 @@ export default function HeroBanner() {
                                     %
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-gray-500 uppercase">Weekly Deal</p>
-                                    <p className="text-sm font-black text-[#0E5B3D]">Save up to 30%</p>
+                                    <p className="text-xs font-bold text-gray-500 uppercase">Global Sourcing</p>
+                                    <p className="text-sm font-black text-[#0E5B3D]">Premium picks, fair prices</p>
                                 </div>
                             </div>
 

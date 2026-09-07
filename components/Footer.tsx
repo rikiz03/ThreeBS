@@ -115,11 +115,11 @@ export default function Footer() {
                         <ul className="space-y-4 font-medium">
                             <li className="flex items-start gap-3 text-gray-300">
                                 <MapPin className="w-5 h-5 text-[#74D644] mt-0.5" />
-                                <span><TranslatedText text="Worldwide Shipping" /><br /><TranslatedText text="US & Europe Priority" /></span>
+                                <span><TranslatedText text="Worldwide Shipping" /></span>
                             </li>
                             <li className="flex items-center gap-3 text-gray-300">
                                 <Phone className="w-5 h-5 text-[#74D644]" />
-                                <span>1-800-3-BROTHERS</span>
+                                <span>+1 575 313 8894</span>
                             </li>
                             <li className="flex items-center gap-3 text-gray-300">
                                 <Mail className="w-5 h-5 text-[#74D644]" />
