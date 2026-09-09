@@ -13,7 +13,7 @@ To receive USD payments globally via Paystack:
 
 2.  **Enable Apple Pay**:
     *   Go to **Settings** > **Apple Pay**.
-    *   Click **Add Domain** and enter `premiumvaluemarket.com`.
+    *   Click **Add Domain** and enter `threebrothersstores.com`.
     *   Download the verification file if prompted and place it in your project's `.well-known` folder (I have already configured your `vercel.json` for this).
     *   Register the domain.
 

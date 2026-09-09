@@ -42,7 +42,7 @@ export default function PrivacyPolicy() {
                 <h2 className="text-2xl font-semibold mb-4">4. Your Rights</h2>
                 <p className="text-gray-700 leading-relaxed">
                     You have the right to access, correct, or delete your personal information.
-                    Please contact us at support@premiumvaluemarket.com to exercise these rights.
+                    Please contact us at support@threebrothersstores.com to exercise these rights.
                 </p>
             </section>
         </div>

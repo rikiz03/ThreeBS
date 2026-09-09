@@ -2,8 +2,8 @@
 // Keeping values here means the admin gate and the profile display stay in sync.
 
 export const OWNER = {
-    businessName: 'Three Brother Stores',
-    businessEmail: 'support@threebrotherstores.com',
+    businessName: 'Three Brothers Stores',
+    businessEmail: 'support@threebrothersstores.com',
     ownerName: 'Olisa Emmanuel Okeke',
 };
 

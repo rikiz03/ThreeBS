@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
+import { SITE_URL } from '@/lib/site';
 
 interface BreadcrumbItem {
     label: string;
@@ -21,13 +22,13 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Home',
-                item: 'https://premiumvaluemarket.com',
+                item: SITE_URL,
             },
             ...items.map((item, index) => ({
                 '@type': 'ListItem',
                 position: index + 2,
                 name: item.label,
-                item: `https://premiumvaluemarket.com${item.href}`,
+                item: `${SITE_URL}${item.href}`,
             })),
         ],
     };

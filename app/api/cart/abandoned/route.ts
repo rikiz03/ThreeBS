@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SITE_URL, SUPPORT_EMAIL } from '@/lib/site';
 
 /**
  * Handles abandoned cart tracking and potential recovery triggers.
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
 
         // 2. Potentially trigger Resend email (if configured)
         const RESEND_API_KEY = process.env.RESEND_API_KEY;
-        const FROM_EMAIL = 'support@premiumvaluemarket.com';
+        const FROM_EMAIL = SUPPORT_EMAIL;
 
         if (RESEND_API_KEY) {
             // In a production app, you would delay this by 1-2 hours
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
                         <p>We noticed you left some premium items in your cart. We've reserved them for you for the next 24 hours.</p>
                         <p>Complete your purchase now and use code <strong>PV10</strong> for an extra 10% OFF!</p>
                         <br/>
-                        <a href="https://premiumvaluemarket.com/checkout" style="background:#000; color:#fff; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:bold;">
+                        <a href={`${SITE_URL}/checkout`} style="background:#000; color:#fff; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:bold;">
                             Complete My Purchase
                         </a>
                     `

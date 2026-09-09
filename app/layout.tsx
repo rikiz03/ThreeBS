@@ -8,9 +8,10 @@ import TrackingProvider from "@/components/TrackingProvider";
 import ExitIntentPopup from "@/components/ExitIntentPopup";
 import SocialProof from "@/components/SocialProof";
 import { Suspense } from "react";
+import { SITE_URL, SITE_NAME, SUPPORT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://threebrothersstores.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Three Brothers' Stores | Premium Global Shopping & Unbeatable Deals",
     template: "%s | Three Brothers' Stores"
@@ -33,8 +34,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://threebrothersstores.com",
-    siteName: "Three Brothers Stores",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     title: "Three Brothers' Stores | Global Shopping Destination",
     description: "Shop premium quality products sourced from top suppliers (CJ Dropshipping, DSers, Eprolo) at unbeatable prices with worldwide shipping.",
     images: [
@@ -79,12 +80,12 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: "Three Brothers' Stores",
-    url: 'https://threebrothersstores.com',
-    logo: 'https://threebrothersstores.com/mylogo1.png',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/mylogo1.png`,
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'support@threebrotherstores.com',
+      email: SUPPORT_EMAIL,
       contactType: 'customer service',
       areaServed: 'Global',
       availableLanguage: 'English',

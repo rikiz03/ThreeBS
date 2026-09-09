@@ -2,6 +2,7 @@
 
 import { Mail, Send, ShieldCheck, MapPin, Phone } from 'lucide-react';
 import { useState } from 'react';
+import { SUPPORT_EMAIL } from '@/lib/site';
 
 export default function ContactUs() {
     const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
@@ -54,7 +55,7 @@ export default function ContactUs() {
                                 <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
                                     <Mail className="w-5 h-5" />
                                 </div>
-                                <span className="font-medium">support@premiumvaluemarket.com</span>
+                                <span className="font-medium">{SUPPORT_EMAIL}</span>
                             </li>
                         </ul>
                     </div>

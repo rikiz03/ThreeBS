@@ -3,6 +3,7 @@ import ProductCard from '@/components/ProductCard';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { getProducts, getCategory } from '@/lib/data';
 import { Metadata, ResolvingMetadata } from 'next';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
 
 export const revalidate = 3600;
 
@@ -20,16 +21,16 @@ export async function generateMetadata(
     }
 
     return {
-        title: `Shop Premium ${category.name} | Premium Value Market`,
-        description: `Explore our collection of high-quality ${category.name}. Best prices and global shipping on all products at Premium Value Market.`,
+        title: `Shop Premium ${category.name} | ${SITE_NAME}`,
+        description: `Explore our collection of high-quality ${category.name}. Best prices and global shipping on all products at ${SITE_NAME}.`,
         alternates: {
-            canonical: `https://premiumvaluemarket.com/category/${slug}`,
+            canonical: `${SITE_URL}/category/${slug}`,
         },
         openGraph: {
             title: category.name,
-            description: `Quality ${category.name} at Premium Value Market.`,
-            url: `https://premiumvaluemarket.com/category/${slug}`,
-            siteName: 'Premium Value Market',
+            description: `Quality ${category.name} at ${SITE_NAME}.`,
+            url: `${SITE_URL}/category/${slug}`,
+            siteName: SITE_NAME,
             images: [
                 {
                     url: category.image || '/mylogo1.png',

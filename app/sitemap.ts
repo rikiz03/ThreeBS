@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next'
 import { getProducts, getCategories } from '@/lib/data'
+import { SITE_URL } from '@/lib/site'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://premiumvaluemarket.com'
+    const baseUrl = SITE_URL
 
     // Fetch all products and categories for dynamic indexing
     const [products, categories] = await Promise.all([

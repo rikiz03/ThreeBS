@@ -6,6 +6,7 @@ import { Instagram, Twitter, Youtube, Mail, ShieldCheck, Lock, CreditCard, MapPi
 import NewsletterSignup from './NewsletterSignup';
 import LogoIcon from './LogoIcon';
 import TranslatedText from './TranslatedText';
+import { SUPPORT_EMAIL } from '@/lib/site';
 
 export default function Footer() {
     return (
@@ -123,7 +124,7 @@ export default function Footer() {
                             </li>
                             <li className="flex items-center gap-3 text-gray-300">
                                 <Mail className="w-5 h-5 text-[#74D644]" />
-                                <span className="text-white hover:text-[#74D644] transition-colors cursor-pointer">support@threebrotherstores.com</span>
+                                <span className="text-white hover:text-[#74D644] transition-colors cursor-pointer">{SUPPORT_EMAIL}</span>
                             </li>
                         </ul>
                     </div>

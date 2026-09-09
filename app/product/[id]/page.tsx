@@ -14,6 +14,7 @@ import TranslatedText from '@/components/TranslatedText';
 import { getTranslation } from '@/lib/i18n';
 import { Metadata, ResolvingMetadata } from 'next';
 import { formatDescription } from '@/lib/text-utils';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
 
 export const revalidate = 60;
 
@@ -34,15 +35,15 @@ export async function generateMetadata(
 
     return {
         title: product.title,
-        description: product.description?.replace(/<[^>]*>/g, '').slice(0, 160) || `Buy ${product.title} at Premium Value Market.`,
+        description: product.description?.replace(/<[^>]*>/g, '').slice(0, 160) || `Buy ${product.title} at ${SITE_NAME}.`,
         alternates: {
-            canonical: `https://premiumvaluemarket.com/product/${id}`,
+            canonical: `${SITE_URL}/product/${id}`,
         },
         openGraph: {
             title: product.title,
             description: product.description?.replace(/<[^>]*>/g, '').slice(0, 160),
-            url: `https://premiumvaluemarket.com/product/${id}`,
-            siteName: 'Premium Value Market',
+            url: `${SITE_URL}/product/${id}`,
+            siteName: SITE_NAME,
             images: [
                 {
                     url: product.image,
@@ -93,17 +94,17 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         description: product.description?.replace(/<[^>]*>/g, ''),
         brand: {
             '@type': 'Brand',
-            name: 'Premium Value Market',
+            name: SITE_NAME,
         },
         offers: {
             '@type': 'Offer',
-            url: `https://premiumvaluemarket.com/product/${id}`,
+            url: `${SITE_URL}/product/${id}`,
             priceCurrency: 'USD',
             price: product.price,
             availability: 'https://schema.org/InStock',
             seller: {
                 '@type': 'Organization',
-                name: 'Premium Value Market',
+                name: SITE_NAME,
             },
         },
         aggregateRating: hasReviews ? {
